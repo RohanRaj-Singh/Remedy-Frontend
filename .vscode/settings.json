@@ -1,0 +1,16 @@
+{
+  // Use Prettier if installed; fallback to built-in
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "files.eol": "\n",
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "tailwindCSS.classAttributes": ["class", "className"],
+  "tailwindCSS.experimental.classRegex": ["tw`([^`]*)"],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": ["Incompleted", "Musandam", "musundam", "Servey", "Surverys"]
+}
