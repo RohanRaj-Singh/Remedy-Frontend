@@ -10,7 +10,6 @@ import streamLocationMapping from "@/data/streamLocationMapping.json";
 import {
   ageOptions,
   genderOptions,
-  locationOptions,
   seniorityOptions,
 } from "@/data/survey";
 import { useGetStartSurveyMutation } from "@/redux/api/apis/surveyApi";
@@ -41,10 +40,10 @@ const seniorityValueMap: { [key: string]: string } = {
   "survey.seniority.options.employee": "employee",
 };
 
-const locationValueMap: { [key: string]: string } = {
-  "survey.location.options.block60": "block60",
-  "survey.location.options.musundam": "msusundam",
-  "survey.location.options.headOffice": "headOffice",
+const locationDisplayMap: { [key: string]: string } = {
+  block60: "B60",
+  msusundam: "Musandam",
+  headOffice: "Muscat",
 };
 
 export default function SurveyPage() {
@@ -133,8 +132,6 @@ export default function SurveyPage() {
     const englishGender = genderValueMap[formData.gender] || formData.gender;
     const englishAge = ageValueMap[formData.age] || formData.age;
     const englishSeniority = seniorityValueMap[formData.seniority] || formData.seniority;
-    const englishLocation = locationValueMap[formData.location] || formData.location;
-
     const body = {
       stream: formData.stream,
       function: formData.function,
@@ -142,7 +139,7 @@ export default function SurveyPage() {
       gender: englishGender,
       age: englishAge,
       seniorityLevel: englishSeniority,
-      location: englishLocation,
+      location: formData.location,
       organizationId: organizationIdParams || "6902bda0c0f78f02d2067668",
     };
 
@@ -231,10 +228,8 @@ export default function SurveyPage() {
                 })
               }
               options={availableLocations.map((locationValue) => {
-                const locationLabel =
-                  locationOptions.find((opt) => opt.value === locationValue)?.label || locationValue;
                 return {
-                  label: t(locationLabel) || locationValue,
+                  label: locationDisplayMap[locationValue] || locationValue,
                   value: locationValue,
                 };
               })}
