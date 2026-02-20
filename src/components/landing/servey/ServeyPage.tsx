@@ -116,6 +116,20 @@ export default function SurveyPage() {
       return;
     }
 
+    const selectedDepartments =
+      (streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>)[
+        formData.stream
+      ]?.[formData.location]?.[formData.function] || [];
+
+    if (!selectedDepartments.includes(formData.department)) {
+      Swal.fire({
+        icon: "warning",
+        title: "Invalid Selection",
+        text: "Please reselect stream, location, function, and department.",
+      });
+      return;
+    }
+
     const englishGender = genderValueMap[formData.gender] || formData.gender;
     const englishAge = ageValueMap[formData.age] || formData.age;
     const englishSeniority = seniorityValueMap[formData.seniority] || formData.seniority;
