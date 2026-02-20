@@ -66,7 +66,7 @@ export const surveyApi = baseApi.injectEndpoints({
     getAllSurveyStatisticsForOrganization: builder.query({
       query: ({ stream, fn, department, age, gender, location }) => ({
         url: `/api/survey/organization/stats`,
-        params: { stream, fn, department, age, gender, location },
+        params: { stream, function: fn, department, age, gender, location },
         method: "GET",
       }),
       providesTags: ["Survey"],
