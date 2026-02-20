@@ -6,9 +6,9 @@ import CustomLabel from "@/components/ui/CustomLabel";
 import PillGroup from "@/components/ui/PillGroup";
 import RadioGroup from "@/components/ui/RadioGroup";
 import SelectInput from "@/components/ui/SelectInput";
+import streamLocationMapping from "@/data/streamLocationMapping.json";
 import {
   ageOptions,
-  departments,
   genderOptions,
   locationOptions,
   seniorityOptions,
@@ -65,12 +65,29 @@ export default function SurveyPage() {
     location: "",
   });
 
-  // Get available functions based on selected stream
-  const availableFunctions = departments.find((d) => d.stream === formData.stream)?.functions || [];
+  const availableLocations = formData.stream
+    ? Object.keys(
+        (streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>)[
+          formData.stream
+        ] || {},
+      )
+    : [];
 
-  // Get available departments based on selected stream and function
+  const availableFunctions =
+    formData.stream && formData.location
+      ? Object.keys(
+          (streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>)[
+            formData.stream
+          ]?.[formData.location] || {},
+        )
+      : [];
+
   const availableDepartments =
-    availableFunctions.find((f) => f.function === formData.function)?.departments || [];
+    formData.stream && formData.location && formData.function
+      ? (streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>)[
+          formData.stream
+        ]?.[formData.location]?.[formData.function] || []
+      : [];
 
   const handleRadioChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -163,20 +180,6 @@ export default function SurveyPage() {
 
       <div className="w-full max-w-2xl">
         <form className="my-4 space-y-6 rounded-xl bg-white p-6 shadow-lg" onSubmit={handleSubmit}>
-          <div>
-            <CustomLabel color="red" required>
-              {t("survey.location.question") || "Which location do you work at?"}
-            </CustomLabel>
-            <RadioGroup
-              name="location"
-              options={locationOptions}
-              value={formData.location}
-              onChange={(val) => handleRadioChange("location", val)}
-              color="red"
-              required
-            />
-          </div>
-
           {/* Stream Selection */}
           <SelectInput
             label={t("survey.stream.question") || "Which stream do you work in?"}
@@ -185,20 +188,49 @@ export default function SurveyPage() {
               setFormData({
                 ...formData,
                 stream: val,
+                location: "",
                 function: "",
                 department: "",
               })
             }
-            options={departments.map((stream) => ({
-              label: t(`survey.streams.${toTranslationKey(stream.stream)}`) || stream.stream,
-              value: stream.stream,
+            options={Object.keys(
+              streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>,
+            ).map((stream) => ({
+              label: t(`survey.streams.${toTranslationKey(stream)}`) || stream,
+              value: stream,
             }))}
             placeholder={t("survey.stream.placeholder") || "Select your stream"}
             required
           />
 
-          {/* Function Selection */}
+          {/* Location Selection */}
           {formData.stream && (
+            <SelectInput
+              label={t("survey.location.question") || "Which location do you work at?"}
+              value={formData.location}
+              onChange={(val) =>
+                setFormData({
+                  ...formData,
+                  location: val,
+                  function: "",
+                  department: "",
+                })
+              }
+              options={availableLocations.map((locationValue) => {
+                const locationLabel =
+                  locationOptions.find((opt) => opt.value === locationValue)?.label || locationValue;
+                return {
+                  label: t(locationLabel) || locationValue,
+                  value: locationValue,
+                };
+              })}
+              placeholder={t("survey.location.placeholder") || "Select your location"}
+              required
+            />
+          )}
+
+          {/* Function Selection */}
+          {formData.stream && formData.location && (
             <SelectInput
               label={t("survey.function.question") || "Which function do you work in?"}
               value={formData.function}
@@ -210,8 +242,8 @@ export default function SurveyPage() {
                 })
               }
               options={availableFunctions.map((func) => ({
-                label: t(`survey.functions.${toTranslationKey(func.function)}`) || func.function,
-                value: func.function,
+                label: t(`survey.functions.${toTranslationKey(func)}`) || func,
+                value: func,
               }))}
               placeholder={t("survey.function.placeholder") || "Select your function"}
               required
@@ -219,7 +251,7 @@ export default function SurveyPage() {
           )}
 
           {/* Department Selection */}
-          {formData.stream && formData.function && (
+          {formData.stream && formData.location && formData.function && (
             <SelectInput
               label={t("survey.department.question") || "Which department do you work in?"}
               value={formData.department}
