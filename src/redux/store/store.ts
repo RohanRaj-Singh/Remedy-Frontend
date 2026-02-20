@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["ui", "survey"], // add "survey" if you want to persist survey state
+  whitelist: ["ui", "survey", "auth"],
 };
 
 // Step 3: Create persisted reducer

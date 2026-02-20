@@ -12,6 +12,7 @@ export const baseApi = createApi({
       if (token) {
         headers.set("Authorization", `${token}`);
       }
+      return headers;
     },
   }),
   tagTypes: ["Survey", "Question", "Organizations"],

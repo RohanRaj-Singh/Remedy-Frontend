@@ -75,14 +75,9 @@ export default function OrganizationAllSurveyResult() {
   // Use the query hook with filters as parameters - backend will handle filtering
   const { data, isLoading, isError } = useGetAllSurveyStatisticsForOrganizationQuery(
     {
-      department:
-        filters.stream && filters.function && filters.department
-          ? `${filters.stream} > ${filters.function} > ${filters.department}`
-          : filters.stream && filters.function
-            ? `${filters.stream} > ${filters.function}`
-            : filters.stream
-              ? filters.stream
-              : filters.department,
+      stream: filters.stream || undefined,
+      fn: filters.function || undefined,
+      department: filters.department || undefined,
       age: filters.age,
       gender: filters.gender,
       location: filters.location,
