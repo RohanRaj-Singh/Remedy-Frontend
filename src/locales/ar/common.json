@@ -1,0 +1,286 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "about": "معلومات عنا",
+    "contact": "اتصل بنا"
+  },
+  "welcome": "مرحبا بك في موقعنا",
+  "banner": {
+    "title": "استبيان الرفاهية",
+    "description": "يمثل هذا الاستبيان الخطوة الأولى في بناء برنامج الرفاهية النفسية لدى OQEP. رأيك الصريح والصادق بشكل كبير في مساعدتنا على إنشاء بيئة عمل أكثر صحة ودعمًا. ملاحظة أن جميع الردود سرية تمامًا وتُدار بشكل مستقل من قبل Remedy.",
+    "button": "ابدأ الاستبيان"
+  },
+  "about": {
+    "title": "معلومات عنا",
+    "subtitle": "مساعدة المؤسسات والأفراد على فهم الرفاهية بشكل أفضل.",
+    "description": "مرحبا بك في منصة استبيان الرفاهية الخاصة بنا! مهمتنا هي تزويد المؤسسات والأفراد برؤى حول الصحة النفسية والإنتاجية والرفاهية العامة. نحن نؤمن بأن فهم رفاهية فرقك أو رفاهيتك الشخصية هو الخطوة الأولى نحو التغيير المعنوي. من خلال استبياناتنا المصممة بعناية ورؤانا القابلة للتنفيذ وسهولة الاستخدام في الاعتبار، يشعر كل مشارك بالثقة والراحة أثناء مشاركة الملاحظات. نحن ملتزمون بمساعدتك في اتخاذ قرارات مدروسة تعزز بيئة أكثر سعادة وصحة وإنتاجية.",
+    "mission": {
+      "title": "مهمتنا",
+      "description": "تمكين الأفراد والمؤسسات من خلال رؤى الرفاهية القابلة للتنفيذ."
+    },
+    "vision": {
+      "title": "رؤيتنا",
+      "description": "عالم حيث تكون الرفاهية قابلة للقياس والفهم والتحسين."
+    },
+    "values": {
+      "title": "قيمنا",
+      "description": "الخصوصية، الدقة، البساطة، النمو"
+    },
+    "standFor": {
+      "title": "ما ندافع عنه",
+      "privacy": {
+        "title": "الخصوصية",
+        "description": "نحافظ على خصوصيتك من خلال حماية بياناتك بأعلى مستويات الأمان والسرية، مع ضمان بقاء جميع الإجابات مجهولة تمامًا."
+      },
+      "accuracy": {
+        "title": "الدقة",
+        "description": "نلتزم بتقديم نتائج دقيقة وموثوقة، حيث تتم معالجة إجاباتك بعناية لضمان جودة التحليل."
+      },
+      "simplicity": {
+        "title": "البساطة",
+        "description": "صممنا منصتنا لتكون سهلة وواضحة، مما يتيح للجميع المشاركة دون أي تعقيد."
+      },
+      "growth": {
+        "title": "النمو",
+        "description": "نركز على التطوير المستمر، ونسعى لدعم المؤسسات في تحسين بيئة العمل وتحقيق نتائج أفضل."
+      }
+    },
+    "journey": {
+      "title": "هل أنت مستعد لبدء رحلة الرفاهية الخاصة بك؟",
+      "description": "انضم إلى آلاف المؤسسات والأفراد الذين يستخدمون منصتنا لفهم وتحسين رفاهيتهم.",
+      "button": "ابدأ اليوم"
+    }
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "subtitle": "مساعدة المؤسسات والأفراد على فهم الرفاهية بشكل أفضل.",
+    "description": "نحن هنا لمساعدتك في أي أسئلة أو مخاوف قد تكون لديك. يرجى عدم التردد في التواصل معنا في أي وقت."
+  },
+  "survey": {
+    "details": {
+      "subtitle": "كل ما تحتاج لمعرفته قبل بدء الاستبيان.",
+      "description": "صُمم استبياننا للرفاهية لتوفير رؤى عملية حول رفاهية الفريق. أجب عن أسئلة بسيطة وساهم في خلق بيئة عمل أكثر صحة وسعادة."
+    },
+    "stream": {
+      "question": "في أي تيار تعمل؟",
+      "placeholder": "اختر تيارك"
+    },
+    "function": {
+      "question": "في أي وظيفة تعمل؟",
+      "placeholder": "اختر وظيفتك"
+    },
+    "department": {
+      "question": "في أي قسم تعمل؟",
+      "placeholder": "اختر قسمك"
+    },
+    "gender": {
+      "question": "الرجاء تحديد جنسك",
+      "options": {
+        "male": "ذكر",
+        "female": "أنثى"
+      }
+    },
+    "age": {
+      "question": "الرجاء تحديد عمرك",
+      "options": {
+        "age18to24": "18-24",
+        "age25to34": "25-34",
+        "age35to44": "35-44",
+        "age45to54": "45-54",
+        "age55plus": "55+"
+      }
+    },
+    "seniority": {
+      "question": "ما هو مستوى كبريائيتك؟",
+      "options": {
+        "seniorManagement": "الإدارة العليا",
+        "manager": "مدير / قائد فريق",
+        "employee": "موظف / مساهم فردي"
+      }
+    },
+    "location": {
+      "question": "في أي موقع تعمل؟",
+      "options": {
+        "block60": "بلوك 60",
+        "musundam": "مسندم",
+        "headOffice": "المكتب الرئيسي"
+      }
+    },
+    "streams": {
+      "commercial": "تجاري",
+      "finance_and_procurement": "المالية والمشتريات",
+      "legal": "قانوني",
+      "operated_assets": "الأصول المشغلة",
+      "oq_exploration_and_production": "شركة OQ للاستكشاف والإنتاج",
+      "people_technology_and_culture": "الأشخاص والتكنولوجيا والثقافة"
+    },
+    "functions": {
+      "business_development": "تطوير الأعمال",
+      "commercial": "تجاري",
+      "exploration": "استكشاف",
+      "joint_ventures": "مشاريع مشتركة",
+      "contract_and_procurement": "العقود والمشتريات",
+      "finance_and_procurement": "المالية والمشتريات",
+      "legal": "قانوني",
+      "hsse": "الصحة والسلامة والأمن والبيئة",
+      "musandam_cluster": "مجموعة مسندم",
+      "operated_assets": "الأصول المشغلة",
+      "projects_delivery": "تسليم المشاريع",
+      "subsurface_and_operation_60_and_48": "العمليات الفرعية والموقع 60 و48",
+      "oq_exploration_and_production": "شركة OQ للاستكشاف والإنتاج",
+      "communications_and_branding": "الاتصالات والعلامة التجارية",
+      "corporate_support_service": "خدمة الدعم المؤسسي",
+      "ids_and_ci": "IDS وCI",
+      "people_and_strategy": "الأشخاص والاستراتيجية",
+      "people_technology_and_culture": "الأشخاص والتكنولوجيا والثقافة"
+    },
+    "departments": {
+      "business_development": "تطوير الأعمال",
+      "mergers_and_acquisitions": "الدمج والاستحواذ",
+      "commercial": "تجاري",
+      "economics_and_planning": "الاقتصاد والتخطيط",
+      "exploration": "استكشاف",
+      "exploration_operated_assets": "استكشاف الأصول المشغلة",
+      "exploration_study_or_growth_team": "فريق دراسة أو نمو الاستكشاف",
+      "joint_ventures_integrated_gas": "مشاريع مشتركة للغاز المتكامل",
+      "joint_ventures": "مشاريع مشتركة",
+      "joint_ventures_business": "أعمال المشاريع المشتركة",
+      "joint_ventures_technical_solution": "الحلول التقنية للمشاريع المشتركة",
+      "contract_and_procurement": "العقود والمشتريات",
+      "contracts": "العقود",
+      "material_management": "إدارة المواد",
+      "bf_non_operated_assets": "الأصول غير المشغلة BF",
+      "bf_operated_assets": "الأصول المشغلة BF",
+      "bf_operated_assets_block_60_and_48": "الأصول المشغلة BF بلوك 60 و48",
+      "finance_and_procurement": "المالية والمشتريات",
+      "financial_control": "الرقابة المالية",
+      "financial_planning_and_analysis": "التخطيط المالي والتحليل",
+      "treasury": "الخزانة",
+      "legal": "قانوني",
+      "hse_operated_asset": "الأصول المشغلة HSE",
+      "hse_support": "دعم HSE",
+      "hsse": "الصحة والسلامة والأمن والبيئة",
+      "oh_and_ih": "OH وIH",
+      "musandam_cluster": "مجموعة مسندم",
+      "operated_assets": "الأصول المشغلة",
+      "technical_services": "الخدمات التقنية",
+      "well_delivery": "تسليم الآبار",
+      "construction": "الإنشاء",
+      "engineering": "الهندسة",
+      "major_projects": "المشاريع الكبرى",
+      "off_plot_projects": "مشاريع خارج الموقع",
+      "project_technical_services": "الخدمات التقنية للمشروع",
+      "projects_delivery": "تسليم المشاريع",
+      "budget_and_cost_control": "التحكم في الميزانية والتكلفة",
+      "growth_and_planning": "النمو والتخطيط",
+      "operation_60_and_48_coe": "التشغيل 60 و48 COE",
+      "subsurface": "العمليات الفرعية",
+      "subsurface_and_operation_60_and_48": "العمليات الفرعية والتشغيل 60 و48",
+      "oq_exploration_and_production": "شركة OQ للاستكشاف والإنتاج",
+      "communications_and_branding": "الاتصالات والعلامة التجارية",
+      "corporate_support_service": "خدمة الدعم المؤسسي",
+      "ids": "IDS",
+      "ids_and_ci": "IDS وCI",
+      "people": "الأشخاص",
+      "people_and_strategy": "الأشخاص والاستراتيجية",
+      "people_technology_and_culture": "الأشخاص والتكنولوجيا والثقافة"
+    },
+    "backButton": "العودة إلى الصفحة الرئيسية",
+    "startButton": "ابدأ الاستبيان",
+    "questions": {
+      "noAnswerTitle": "لم يتم اختيار إجابة",
+      "noAnswerText": "يرجى اختيار إجابة قبل المتابعة.",
+      "missingDataTitle": "بيانات الاستبيان مفقودة",
+      "missingDataText": "بيانات الاستبيان غير متوفرة. يرجى إعادة تشغيل الاستبيان.",
+      "submitFailedTitle": "فشل الإرسال",
+      "submitFailedText": "يرجى المحاولة مرة أخرى.",
+      "homeButtonMobile": "الرئيسية",
+      "homeButtonDesktop": "العودة إلى الصفحة الرئيسية",
+      "completedLabel": "مكتمل",
+      "questionLabel": "السؤال",
+      "ofLabel": "من",
+      "nextButton": "التالي"
+    }
+  },
+  "footer": {
+    "about": "معلومات عنا",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة",
+    "help": "مركز المساعدة",
+    "copyright": "© 2025 Echocart. جميع الحقوق محفوظة hello@echocart.com"
+  },
+  "admin": {
+    "dashboard": "لوحة تحكم المشرف"
+  },
+  "user": {
+    "dashboard": "لوحة تحكم المستخدم"
+  },
+  "howItWorks": {
+    "title": {
+      "part1": "كيف",
+      "part2": "يعمل"
+    },
+    "steps": {
+      "answer": {
+        "title": "أجب عن الأسئلة",
+        "description": "أجب بصراحة عن كل سؤال للحصول على رؤى دقيقة. خذ وقتك وفكر في كل سؤال بعناية للحصول على نتائج ذات مغزى nhất."
+      },
+      "summary": {
+        "title": "ملخص",
+        "description": "نظرة عامة على جميع الردود مع رؤى تفصيلية لمساعدة المؤسسة على فهم الاتجاهات والأنماط الرئيسية. تدعم هذه الردود اتخاذ قرارات مبنية على البيانات لتحسين رفاهية الموظفين وفعالية بيئة العمل."
+      },
+      "action": {
+        "title": "اتخذ إجراء",
+        "description": "رؤى لتحسين رفاهية الموظفين داخل مؤسستك وتعزيز بيئة عمل أكثر صحة ودعمًا."
+      }
+    }
+  },
+  "surveyGlance": {
+    "title": {
+      "part1": "الاستبيان",
+      "part2": "لمحة سريعة"
+    },
+    "duration": {
+      "title": "مدة الاستبيان",
+      "description": "يستغرق إكماله حوالي 15-20 دقائق."
+    },
+    "questions": {
+      "title": "عدد الأسئلة",
+      "description": "30-25 سؤال اختيار من متعدد تغطي جوانب مختلفة من الرفاهية."
+    },
+    "types": {
+      "title": "أنواع الأسئلة",
+      "description": "مقياس ليكرت 4، تنسيقات الاختيار من متعدد."
+    },
+    "privacy": {
+      "title": "الخصوصية",
+      "description": "ردودك مجهولة تماماً ومشفرة بشكل آمن. يتم تجميع البيانات لحماية الخصوصية الفردية، مع دمج أي نتائج تحتوي على أقل من 4 مشاركين تلقائياً مع فئات أوسع."
+    },
+    "purpose": {
+      "title": "الغرض",
+      "description": "فهم مستويات الرفاهية، وتحديد مجالات للتحسين، والحصول على رؤى قابلة للتنفيذ."
+    }
+  },
+  "subdomains": {
+    "anxietyRisk": "خطر القلق",
+    "anxietySeverity": "شدة القلق",
+    "anxietySymptom": "أعراض القلق",
+    "burnoutIntensity": "شدة الإرهاق",
+    "burnoutRisk": "خطر الإرهاق",
+    "burnout": "الإرهاق",
+    "coworkerRelationships": "علاقات الزملاء",
+    "depressionRisk": "خطر الاكتئاب",
+    "depressionSeverity": "شدة الاكتئاب",
+    "fairnessAndRecognition": "العدالة والتقدير",
+    "fearBlameIntensity": "شدة الخوف/اللوم",
+    "healthImpact": "تأثير الصحة",
+    "leadershipAndAlignment": "القيادة والانحياز",
+    "mentalHealthRisk": "خطر الصحة النفسية",
+    "personalWellbeing": "الرفاهية الشخصية",
+    "psychSafety": "السلامة النفسية",
+    "rootCauseIntensity": "شدة السبب الجذري",
+    "trustRefinement": "تحسين الثقة",
+    "workloadAndEfficiency": "العبء والإنتاجية",
+    "workplaceSatisfaction": "رضا مكان العمل"
+  }
+}

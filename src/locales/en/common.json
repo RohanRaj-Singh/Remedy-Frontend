@@ -1,0 +1,287 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "welcome": "Welcome to our site",
+  "banner": {
+    "title": "Wellbeing Survey",
+    "description": "This survey marks the first step in building OQEP's Mental Well-Being Program.Your open and honest feedback will play a vital role in helping us create a healthier and more supportive work environment.\nPlease note that all responses are strictly confidential and managed independently by Remedy.",
+    "button": "Start Survey"
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Helping organizations and individuals understand wellbeing better.",
+    "description": "Welcome to our Wellbeing Survey Platform! Our mission is to provide organizations and individuals with insights into mental health, productivity, and overall wellbeing. We believe that understanding your teams or personal wellbeing is the first step toward meaningful change. Through our carefully designed surveys, actionable insights, and ease of use in mind, every participant feels confident and comfortable while sharing feedback. We are committed to helping you make informed decisions that promote a happier, healthier, and more productive environment.",
+    "mission": {
+      "title": "Our Mission",
+      "description": "Empower individuals and organizations with actionable wellbeing insights."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "A world where wellbeing is measurable, understood, and improved."
+    },
+    "values": {
+      "title": "Our Values",
+      "description": "Privacy, Accuracy, Simplicity, Growth"
+    },
+    "standFor": {
+      "title": "What We Stand For",
+      "privacy": {
+        "title": "Privacy",
+        "description": "We protect your data with the highest standards of security and confidentiality. All responses are anonymous and encrypted."
+      },
+      "accuracy": {
+        "title": "Accuracy",
+        "description": "We focus on delivering reliable and precise insights. Your input is processed carefully to ensure the results truly reflect your team's wellbeing."
+      },
+      "simplicity": {
+        "title": "Simplicity",
+        "description": "We make the experience effortless and intuitive. Our survey is designed to be quick, clear, and easy for everyone to complete."
+      },
+      "growth": {
+        "title": "Growth",
+        "description": "We empower organizations to evolve with meaningful insights. Our goal is to support long-term improvement and a healthier workplace culture."
+      }
+    },
+    "journey": {
+      "title": "Ready to Start Your Wellbeing Journey?",
+      "description": "Join thousands of organizations and individuals who are using our platform to understand and improve their wellbeing.",
+      "button": "Get Started Today"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Helping organizations and individuals understand wellbeing better.",
+    "description": "We are here to help you with any questions or concerns you may have. Please feel free to reach out to us at any time."
+  },
+  "survey": {
+    "details": {
+      "subtitle": "Everything you need to know before starting the survey.",
+      "description": "Our Wellbeing Survey is designed to provide actionable insights into  team wellbeing. Answer simple questions   and help create a healthier, happier environment."
+    },
+    "stream": {
+      "question": "Which stream do you work in?",
+      "placeholder": "Select your stream"
+    },
+    "function": {
+      "question": "Which function do you work in?",
+      "placeholder": "Select your function"
+    },
+    "department": {
+      "question": "Which department do you work in?",
+      "placeholder": "Select your department"
+    },
+    "gender": {
+      "question": "Please select your gender",
+      "options": {
+        "male": "Male",
+        "female": "Female"
+      }
+    },
+    "age": {
+      "question": "Please select your age",
+      "options": {
+        "age18to24": "18-24",
+        "age25to34": "25-34",
+        "age35to44": "35-44",
+        "age45to54": "45-54",
+        "age55plus": "55+"
+      }
+    },
+    "seniority": {
+      "question": "What is your seniority level?",
+      "options": {
+        "seniorManagement": "Senior Management",
+        "manager": "Manager / Team Lead",
+        "employee": "Employee / Individual Contributor"
+      }
+    },
+    "location": {
+      "question": "Which location do you work at?",
+      "options": {
+        "block60": "B60",
+        "musundam": "Musandam",
+        "headOffice": "Muscat"
+      }
+    },
+    "streams": {
+      "commercial": "Commercial",
+      "finance_and_procurement": "Finance And Procurement",
+      "legal": "Legal",
+      "operated_assets": "Operated Assets",
+      "oq_exploration_and_production": "OQ Exploration And Production",
+      "people_technology_and_culture": "People Technology And Culture"
+    },
+    "functions": {
+      "business_development": "Business Development",
+      "commercial": "Commercial",
+      "exploration": "Exploration",
+      "joint_ventures": "Joint Ventures",
+      "contract_and_procurement": "Contract And Procurement",
+      "finance_and_procurement": "Finance And Procurement",
+      "legal": "Legal",
+      "hsse": "HSSE",
+      "musandam_cluster": "Musandam Cluster",
+      "operated_assets": "Operated Assets",
+      "projects_delivery": "Projects Delivery",
+      "subsurface_and_operation_60_and_48": "Subsurface And Operation 60 And 48",
+      "oq_exploration_and_production": "OQ Exploration And Production",
+      "communications_and_branding": "Communications And Branding",
+      "corporate_support_service": "Corporate Support Service",
+      "ids_and_ci": "IDS And CI",
+      "people_and_strategy": "People And Strategy",
+      "people_technology_and_culture": "People Technology And Culture"
+    },
+    "departments": {
+      "business_development": "Business Development",
+      "mergers_and_acquisitions": "Mergers And Acquisitions",
+      "commercial": "Commercial",
+      "economics_and_planning": "Economics And Planning",
+      "exploration": "Exploration",
+      "exploration_operated_assets": "Exploration Operated Assets",
+      "exploration_study_or_growth_team": "Exploration Study Or Growth Team",
+      "joint_ventures_integrated_gas": "Joint Ventures Integrated Gas",
+      "joint_ventures": "Joint Ventures",
+      "joint_ventures_business": "Joint Ventures Business",
+      "joint_ventures_technical_solution": "Joint Ventures Technical Solution",
+      "contract_and_procurement": "Contract And Procurement",
+      "contracts": "Contracts",
+      "material_management": "Material Management",
+      "bf_non_operated_assets": "BF Non Operated Assets",
+      "bf_operated_assets": "BF Operated Assets",
+      "bf_operated_assets_block_60_and_48": "BF Operated Assets Block 60 And 48",
+      "finance_and_procurement": "Finance And Procurement",
+      "financial_control": "Financial Control",
+      "financial_planning_and_analysis": "Financial Planning And Analysis",
+      "treasury": "Treasury",
+      "legal": "Legal",
+      "hse_operated_asset": "HSE Operated Asset",
+      "hse_support": "HSE Support",
+      "hsse": "HSSE",
+      "oh_and_ih": "OH And IH",
+      "musandam_cluster": "Musandam Cluster",
+      "operated_assets": "Operated Assets",
+      "technical_services": "Technical Services",
+      "well_delivery": "Well Delivery",
+      "construction": "Construction",
+      "engineering": "Engineering",
+      "major_projects": "Major Projects",
+      "off_plot_projects": "Off Plot Projects",
+      "project_technical_services": "Project Technical Services",
+      "projects_delivery": "Projects Delivery",
+      "budget_and_cost_control": "Budget And Cost Control",
+      "growth_and_planning": "Growth And Planning",
+      "operation_60_and_48_coe": "Operation 60 And 48 COE",
+      "subsurface": "Subsurface",
+      "subsurface_and_operation_60_and_48": "Subsurface And Operation 60 And 48",
+      "oq_exploration_and_production": "OQ Exploration And Production",
+      "communications_and_branding": "Communications And Branding",
+      "corporate_support_service": "Corporate Support Service",
+      "ids": "IDS",
+      "ids_and_ci": "IDS And CI",
+      "people": "People",
+      "people_and_strategy": "People And Strategy",
+      "people_technology_and_culture": "People Technology And Culture"
+    },
+    "backButton": "Back to Home",
+    "startButton": "Start Survey",
+    "questions": {
+      "noAnswerTitle": "No Answer Selected",
+      "noAnswerText": "Please select an answer before proceeding.",
+      "missingDataTitle": "Survey Data Missing",
+      "missingDataText": "Survey data is not available. Please restart the survey.",
+      "submitFailedTitle": "Submission Failed",
+      "submitFailedText": "Please try again.",
+      "homeButtonMobile": "Home",
+      "homeButtonDesktop": "Back to Home",
+      "completedLabel": "Completed",
+      "questionLabel": "Question",
+      "ofLabel": "of",
+      "nextButton": "Next"
+    }
+  },
+  "footer": {
+    "about": "About us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "help": "Help Center",
+    "copyright": "© 2025 Echocart. All rights reserved hello@echocart.com"
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard"
+  },
+  "user": {
+    "dashboard": "User Dashboard"
+  },
+  "howItWorks": {
+    "title": {
+      "part1": "How It",
+      "part2": "Works"
+    },
+    "steps": {
+      "answer": {
+        "title": "Answer Questions",
+        "description": "Respond honestly to each question to get accurate insights. Take your time and consider each question carefully for the most meaningful results."
+      },
+      "summary": {
+        "title": "Summary",
+        "description": "An overview of all responses with detailed insights to help the organization understand key trends and patterns. "
+      },
+      "action": {
+        "title": "Take Action",
+        "description": "Insights to improve well-being within your organization and foster a healthier, more supportive work environment."
+      }
+    }
+  },
+  "surveyGlance": {
+    "title": {
+      "part1": "Survey",
+      "part2": "at a Glance"
+    },
+    "duration": {
+      "title": "Survey Duration",
+      "description": "Takes approximately 15-20 minutes to complete."
+    },
+    "questions": {
+      "title": "Number of Questions",
+      "description": "25-30 multiple-choice questions covering various aspects of wellbeing."
+    },
+    "types": {
+      "title": "Question Types",
+      "description": "Likert scale 4,  multiple-choice formats."
+    },
+    "privacy": {
+      "title": "Privacy",
+      "description": "Your responses are completely anonymous and securely encrypted. Data is aggregated to protect individual privacy, with any results containing fewer than 4 participants automatically combined with broader categories."
+    },
+    "purpose": {
+      "title": "Purpose",
+      "description": "Understand wellbeing levels, identify areas for improvement, and gain actionable insights."
+    }
+  },
+  "subdomains": {
+    "anxietyRisk": "Anxiety Risk",
+    "anxietySeverity": "Anxiety Severity",
+    "anxietySymptom": "Anxiety Symptom",
+    "burnoutIntensity": "Burnout Intensity",
+    "burnoutRisk": "Burnout Risk",
+    "burnout": "Burnout",
+    "coworkerRelationships": "Coworker Relationships",
+    "depressionRisk": "Depression Risk",
+    "depressionSeverity": "Depression Severity",
+    "fairnessAndRecognition": "Fairness & Recognition",
+    "fearBlameIntensity": "Fear/Blame Intensity",
+    "healthImpact": "Health Impact",
+    "leadershipAndAlignment": "Leadership & Alignment",
+    "mentalHealthRisk": "Mental Health Risk",
+    "personalWellbeing": "Personal Wellbeing",
+    "psychSafety": "Psych. Safety",
+    "rootCauseIntensity": "Root Cause Intensity",
+    "trustRefinement": "Trust Refinement",
+    "workloadAndEfficiency": "Workload & Efficiency",
+    "workplaceSatisfaction": "Workplace Satisfaction"
+  }
+}
+

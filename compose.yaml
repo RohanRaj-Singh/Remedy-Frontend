@@ -1,0 +1,16 @@
+services:
+  admin:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        API_BASE_URL: ${API_BASE_URL}
+    container_name: remedy_frontend
+    image: arafat2025/remedy_frontend:latest
+    platform: linux/amd64
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
