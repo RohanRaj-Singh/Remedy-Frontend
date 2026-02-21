@@ -101,9 +101,9 @@
     "location": {
       "question": "Which location do you work at?",
       "options": {
-        "block60": "Block 60",
-        "musundam": "Musundam",
-        "headOffice": "Head Office"
+        "block60": "B60",
+        "musundam": "Musandam",
+        "headOffice": "Muscat"
       }
     },
     "streams": {
@@ -284,3 +284,4 @@
     "workplaceSatisfaction": "Workplace Satisfaction"
   }
 }
+

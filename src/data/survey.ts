@@ -174,7 +174,7 @@ export const seniorityOptions = [
 ];
 
 export const locationOptions = [
-  { label: "survey.location.options.block60", value: "block60" },
-  { label: "survey.location.options.musundam", value: "msusundam" },
-  { label: "survey.location.options.headOffice", value: "headOffice" },
+  { label: "B60", value: "block60" },
+  { label: "Musandam", value: "msusundam" },
+  { label: "Muscat", value: "headOffice" },
 ];
