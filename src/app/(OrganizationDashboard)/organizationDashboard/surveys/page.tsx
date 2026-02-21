@@ -6,11 +6,11 @@ import GenderAnalysis from "@/components/dashboard/adminDashboard/surveys/Gender
 import MentalHealthMetrics from "@/components/dashboard/adminDashboard/surveys/MentalHealthMetrics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SelectInput from "@/components/ui/SelectInput";
+import streamLocationMapping from "@/data/streamLocationMapping.json";
 import { ageOptions, departments, genderOptions, locationOptions } from "@/data/survey";
 import { useGetAllSurveyStatisticsForOrganizationQuery } from "@/redux/api/apis/surveyApi";
 import { DashboardData } from "@/typesAndIntefaces/AdminSurveyTypes";
 import { AlertCircle, Smile, Target, TrendingUp, Users } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
   CartesianGrid,
@@ -54,8 +54,14 @@ interface FilterState {
 }
 
 export default function OrganizationAllSurveyResult() {
-  const searchParams = useSearchParams();
-  const organizationId = searchParams.get("organizationId");
+  const mapping = streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>;
+
+  const locationDisplayMap: Record<string, string> = {
+    block60: "B60",
+    msusundam: "Musandam",
+    headOffice: "Muscat",
+  };
+
   const [filters, setFilters] = useState<FilterState>({
     stream: "",
     function: "",
@@ -65,12 +71,21 @@ export default function OrganizationAllSurveyResult() {
     location: "",
   });
 
-  // Get available functions based on selected stream
-  const availableFunctions = departments.find((d) => d.stream === filters.stream)?.functions || [];
+  const availableStreams = Array.from(
+    new Set([...departments.map((s) => s.stream), ...Object.keys(mapping)]),
+  );
 
-  // Get available departments based on selected stream and function
+  const availableLocations = filters.stream ? Object.keys(mapping[filters.stream] || {}) : [];
+
+  const availableFunctions =
+    filters.stream && filters.location
+      ? Object.keys(mapping[filters.stream]?.[filters.location] || {})
+      : [];
+
   const availableDepartments =
-    availableFunctions.find((f) => f.function === filters.function)?.departments || [];
+    filters.stream && filters.location && filters.function
+      ? mapping[filters.stream]?.[filters.location]?.[filters.function] || []
+      : [];
 
   // Use the query hook with filters as parameters - backend will handle filtering
   const { data, isLoading, isError } = useGetAllSurveyStatisticsForOrganizationQuery(
@@ -91,11 +106,21 @@ export default function OrganizationAllSurveyResult() {
 
   // Handle filter changes
   const handleFilterChange = (key: keyof FilterState, value: string) => {
-    // When stream changes, reset function and department
+    // When stream changes, reset location/function/department
     if (key === "stream") {
       setFilters((prev) => ({
         ...prev,
         stream: value,
+        location: "",
+        function: "",
+        department: "",
+      }));
+    }
+    // When location changes, reset function and department
+    else if (key === "location") {
+      setFilters((prev) => ({
+        ...prev,
+        location: value,
         function: "",
         department: "",
       }));
@@ -298,12 +323,12 @@ export default function OrganizationAllSurveyResult() {
             <SelectInput
               value={filters.stream}
               onChange={(value) => handleFilterChange("stream", value)}
-              options={departments
+              options={availableStreams
                 .map((stream) => ({
-                  label: stream.stream,
-                  value: stream.stream,
+                  label: stream,
+                  value: stream,
                 }))
-                .slice()} // Convert readonly array to mutable array
+                .slice()}
               placeholder="Filter by Stream"
             />
 
@@ -326,33 +351,35 @@ export default function OrganizationAllSurveyResult() {
             <SelectInput
               value={filters.location}
               onChange={(value) => handleFilterChange("location", value)}
-              options={[
-                ...locationOptions.map((location) => ({
-                  label: location.label,
-                  value: location.value,
-                })),
-              ]}
+              options={
+                filters.stream
+                  ? availableLocations.map((loc) => ({
+                      label: locationDisplayMap[loc] || loc,
+                      value: loc,
+                    }))
+                  : [...locationOptions.map((location) => ({ label: location.label, value: location.value }))]
+              }
               placeholder="Filter by Location"
             />
           </div>
 
           {(filters.stream || filters.function || filters.department) && (
             <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-4">
-              {filters.stream && (
+              {filters.stream && filters.location && (
                 <SelectInput
                   value={filters.function}
                   onChange={(value) => handleFilterChange("function", value)}
                   options={availableFunctions
                     .map((func) => ({
-                      label: func.function,
-                      value: func.function,
+                      label: func,
+                      value: func,
                     }))
-                    .slice()} // Convert readonly array to mutable array
+                    .slice()}
                   placeholder="Filter by Function"
                 />
               )}
 
-              {filters.stream && filters.function && (
+              {filters.stream && filters.location && filters.function && (
                 <SelectInput
                   value={filters.department}
                   onChange={(value) => handleFilterChange("department", value)}
