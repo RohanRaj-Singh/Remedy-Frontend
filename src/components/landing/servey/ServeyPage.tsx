@@ -233,7 +233,9 @@ export default function SurveyPage() {
                   value: locationValue,
                 };
               })}
-              placeholder={t("survey.location.placeholder") || "Select your location"}
+              placeholder={t("survey.location.placeholder", {
+                defaultValue: "Select your location",
+              })}
               required
             />
           )}
