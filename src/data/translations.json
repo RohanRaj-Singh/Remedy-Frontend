@@ -1,0 +1,236 @@
+{
+  "questions": [
+    {
+      "english": "How often have you felt calm and peaceful in the last two weeks?",
+      "bangla": "গত দুই সপ্তাহে আপনি কতবার শান্ত এবং স্থির অনুভব করেছেন?",
+      "arabic": "كم مرة شعرت بالهدوء والسلام خلال الأسبوعين الماضيين؟"
+    },
+    {
+      "english": "How often do you receive clear instructions and objectives for your tasks, and do they align with your role?",
+      "bangla": "আপনি কতবার আপনার কাজের জন্য স্পষ্ট নির্দেশনা এবং লক্ষ্য পান, এবং তা কি আপনার দায়িত্বের সাথে সামঞ্জস্যপূর্ণ?",
+      "arabic": "كم مرة تتلقى تعليمات وأهداف واضحة لمهامك، وهل تتوافق مع دورك؟"
+    },
+    {
+      "english": "How often do you feel that your mental and emotional energy is depleted at the end of a workday?",
+      "bangla": "একটি কর্মদিবসের শেষে আপনার মানসিক এবং আবেগজনিত শক্তি নিঃশেষিত বলে আপনি কতবার অনুভব করেন?",
+      "arabic": "كم مرة تشعر أن طاقتك العقلية والعاطفية قد استنفدت في نهاية يوم العمل؟"
+    },
+    {
+      "english": "To what extent do you feel you have the personal resilience to handle workplace stressors without feeling overwhelmed?",
+      "bangla": "কাজের চাপ সামলাতে আপনার নিজের মানসিক দৃঢ়তা কতটা বলে আপনি মনে করেন?",
+      "arabic": "إلى أي مدى تشعر أنك تتمتع بالمرونة الشخصية اللازمة للتعامل مع ضغوطات العمل دون الشعور بالإرهاق؟"
+    },
+    {
+      "english": "How satisfied are you with your current work-life balance?",
+      "bangla": "আপনি আপনার বর্তমান কাজ-জীবনের ভারসাম্য নিয়ে কতটা সন্তুষ্ট?",
+      "arabic": "على مدى الشهر الماضي، كيف تقيم مدى رضاك العام عن التوازن بين العمل والحياة؟"
+    },
+    {
+      "english": "How satisfied are you with your current work-life balance?",
+      "bangla": "আপনি আপনার বর্তমান কাজ-জীবনের ভারসাম্য নিয়ে কতটা সন্তুষ্ট?",
+      "arabic": "على مدى الشهر الماضي، كيف تقيم مدى رضاك العام عن التوازن بين العمل والحياة؟"
+    },
+    {
+      "english": "Do you believe your workload is fair and balanced compared to your colleagues?",
+      "bangla": "আপনি কি মনে করেন আপনার কাজের চাপ সহকর্মীদের তুলনায় ন্যায্য এবং সুষম?",
+      "arabic": "هل تعتقد أن حجم العمل الخاص بك عادل ومتوازن مقارنة بزملائك؟"
+    },
+    {
+      "english": "How often do you feel micromanaged, or that your manager constantly interferes with your tasks?",
+      "bangla": "আপনি কতবার মাইক্রোম্যানেজড অনুভব করেন, অথবা আপনার ম্যানেজার আপনার কাজে অবিরাম হস্তক্ষেপ করেন?",
+      "arabic": "كم مرة تشعر أن مديرك يتدخل باستمرار في مهامك؟"
+    },
+    {
+      "english": "How would you rate the general environment in your immediate team (1 = Toxic/Blaming, 4 = Healthy/Supportive)?",
+      "bangla": "আপনার নিকটবর্তী দলের সাধারণ পরিবেশ কীভাবে মূল্যায়ন করবেন (১ = বিষাক্ত/দোষারোপকারী, ৪ = স্বাস্থ্যকর/সহায়ক)?",
+      "arabic": "كيف تقيم البيئة العامة في فريقك المباشر (1 = سامة/لوم، 4 = صحية/داعمة)؟"
+    },
+    {
+      "english": "To what extent do you feel your direct manager provides clear, consistent, and effective communication?",
+      "bangla": "আপনার সরাসরি ম্যানেজার স্পষ্ট, ধারাবাহিক এবং কার্যকর যোগাযোগ প্রদান করেন বলে আপনি কতটা মনে করেন?",
+      "arabic": "إلى أي مدى تشعر أن مديرك المباشر يوفر تواصلًا واضحًا ومتسقًا وفعالًا؟"
+    },
+    {
+      "english": "Do you feel a strong sense of trust and cooperation within your immediate team?",
+      "bangla": "আপনার নিকটবর্তী দলে আস্থা এবং সহযোগিতার দৃঢ় অনুভূতি আছে বলে আপনি মনে করেন?",
+      "arabic": "هل تشعر بإحساس قوي بالثقة والتعاون داخل فريقك المباشر؟"
+    },
+    {
+      "english": "How often do your colleagues provide a supportive listening ear when you face work-related stress?",
+      "bangla": "কাজ-সম্পর্কিত চাপের সময় আপনার সহকর্মীরা সহায়ক শ্রবণকারী হিসেবে কতবার উপস্থিত থাকেন?",
+      "arabic": "كم مرة يقدم لك زملاؤك أذنًا صاغية داعمة عندما تواجه ضغوطًا مرتبطة بالعمل؟"
+    },
+    {
+      "english": "How would you describe the general level of empathy and understanding among your team members?",
+      "bangla": "আপনার দলের সদস্যদের মধ্যে সহানুভূতি এবং বোঝাপড়ার সাধারণ স্তর কীভাবে বর্ণনা করবেন?",
+      "arabic": "كيف تصف المستوى العام للتعاطف والتفاهم بين أعضاء فريقك؟"
+    },
+    {
+      "english": "To what extent do you feel that HR provides effective and confidential support for employee concerns?",
+      "bangla": "কর্মচারীদের উদ্বেগের জন্য এইচআর কার্যকর এবং গোপনীয় সমর্থন প্রদান করে বলে আপনি কতটা মনে করেন?",
+      "arabic": "إلى أي مدى تشعر أن إدارة الموارد البشرية تقدم دعمًا فعالًا وسريًا لمخاوف الموظفين؟"
+    },
+    {
+      "english": "If you make a mistake at work, how would you expect your team or manager to respond?",
+      "bangla": "কাজে ভুল করলে আপনার দল বা ম্যানেজার كيف تتوقع أن يتصرف فريقك أو مديرك؟",
+      "arabic": "إذا ارتكبت خطأ في العمل، كيف تتوقع أن يتصرف فريقك أو مديرك؟"
+    },
+    {
+      "english": "How comfortable are you speaking up and providing honest feedback without fear of negative consequences?",
+      "bangla": "নেতিবাচক পরিণতির ভয় ছাড়াই স্পষ্টভাবে কথা বলা এবং সৎ প্রতিক্রিয়া দেওয়ায় আপনি কতটা স্বাচ্ছন্দ্যবোধ করেন?",
+      "arabic": "هل تشعر بالراحة عند التحدث وتقديم تعليقات صادقة دون خوف من العواقب السلبية؟"
+    },
+    {
+      "english": "To what extent do you feel that your opinions and concerns are valued and respected by your manager?",
+      "bangla": "আপনার মতামত এবং উদ্বেগ ম্যানেজারের কাছে মূল্যবান এবং সম্মানিত বলে আপনি কতটা মনে করেন?",
+      "arabic": "إلى أي مدى تشعر أن آراءك ومخاوفك تحظى بالتقدير والاحترام من قبل مديرك؟"
+    },
+    {
+      "english": "To what extent do you feel that your team and manager listen to you without judgment?",
+      "bangla": "আপনার দল এবং ম্যানেজার বিচার না করে আপনার কথা শোনেন বলে আপনি কতটা মনে করেন?",
+      "arabic": "إلى أي مدى تشعر أن فريقك ومديرك يستمعون إليك دون إصدار أحكام؟"
+    },
+    {
+      "english": "Do you feel safe to report a procedural or ethical error in your department without fear of being punished?",
+      "bangla": "বিভাগে প্রক্রিয়াগত বা নৈতিক ভুল রিপোর্ট করতে শাস্তির ভয় ছাড়াই নিরাপদ মনে করেন?",
+      "arabic": "هل تشعر بالأمان للإبلاغ عن خطأ إجرائي أو أخلاقي في قسمك دون خوف من العقاب؟"
+    },
+    {
+      "english": "How much do you trust that confidential information you share with HR will remain private?",
+      "bangla": "এইচআর-এর সাথে শেয়ার করা গোপনীয় তথ্য গোপন থাকবে বলে আপনি কতটা বিশ্বাস করেন?",
+      "arabic": "ما مدى ثقتك في أن المعلومات السرية التي تشاركها مع قسم الموارد البشرية ستظل خاصة؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you felt little interest or pleasure in doing things?",
+      "bangla": "গত দুই সপ্তাহে কাজকর্মে আগ্রহ বা আনন্দ কম অনুভব করেছেন কতবার?",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة شعرت بقلة الاهتمام أو المتعة أثناء القيام بالأشياء؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you felt nervous, anxious, or unable to stop worrying?",
+      "bangla": "গত দুই সপ্তাহে উদ্বিগ্ন, চিন্তিত বা চিন্তা বন্ধ করতে অক্ষম অনুভব করেছেন কতবার?",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة شعرت بالتوتر أو القلق أو عدم القدرة على التوقف عن القلق؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you been bothered by not being able to stop or control worrying?",
+      "bangla": "গত দুই সপ্তাহে চিন্তা নিয়ন্ত্রণ বা بন্ধ করতে অক্ষমতায় বিরক্ত হয়েছেন কতবার?",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة شعرت بالانزعاج بسبب عدم قدرتك على إيقاف القلق أو السيطرة عليه؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you felt so tired you had difficulty with daily tasks?",
+      "bangla": "গত দুই সপ্তাহে এত ক্লান্তি অনুভব করেছেন যে دৈনন্দিন كাজে أসুবিধা হয়েছে كতবার؟",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة شعرت بالتعب الشديد الذي جعلك تواجه صعوبة في أداء مهامك اليومية؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you felt cynical or detached from your work?",
+      "bangla": "গত দুই সপ্তাহে كাজ থেকে বিচ্ছিন্ন বা نিন্দাসূচক অনুভূতি كتবার হয়েছে؟",
+      "arabic": "خلال الأسبوعين الماضيين، كم مرة شعرت بالتشاؤم أو الانفصال عن عملك؟"
+    },
+    {
+      "english": "How often do you feel that your achievements are appropriately acknowledged and rewarded by your manager?",
+      "bangla": "আপনার সাফল্য ম্যানেজারের দ্বারা يথাযথভাবে س্বীকৃت ও পুরস্কৃত হয় বলে আপনি কতবার মনে করেন؟",
+      "arabic": "كم مرة تشعر أن إنجازاتك تحظى بالتقدير والمكافأة من مديرك؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you felt frustrated by your work or gotten the feeling that you work too hard?",
+      "bangla": "গত দুই সপ্তাহে كাজের জন্য হতাশা বা অতিরিক্ত কঠোর পরিশ্রমের অনুভূতি كতবার হয়েছে؟",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة شعرت بالإحباط بسبب عملك أو شعرت بأنك تعمل بجد أكثر من اللازم؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you been bothered by feeling down, depressed, or hopeless?",
+      "bangla": "গত দুই সপ্তাহে বিষণ্ণতা, হতাশা বা নিরাশার অনুভূতিতে বিরক্ত হয়েছেন كتবার؟",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة شعرت بالاكتئاب أو الإحباط أو اليأس؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you been bothered by worrying too much about different things?",
+      "bangla": "গত দুই সপ্তাহে বিভিন্ন বিষয়ে অতিরিক্ত চিন্তায় বিরক্ত হয়েছেন كتবার؟",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة أزعجك القلق الشديد بشأن أشياء مختلفة؟"
+    },
+    {
+      "english": "Over the last two weeks, how often have you been bothered by trouble relaxing?",
+      "bangla": "গত দুই সপ্তাহে শিথিল হতে অসুবিধায় বিরক্ত হয়েছেন كتবার؟",
+      "arabic": "على مدى الأسبوعين الماضيين، كم مرة أزعجتك مشكلة الاسترخاء؟"
+    },
+    {
+      "english": "To what extent do your work-related worries affect the amount or quality of your sleep?",
+      "bangla": "কাজ-সম্পর্কিত চিন্তা আপনার ঘুমের পরিমাণ বা গুণগত মান كتটা প্রভাবিত করে؟",
+      "arabic": "إلى أي مدى تؤثر مخاوفك المتعلقة بالعمل على كمية أو جودة نومك؟"
+    },
+    {
+      "english": "How often does the micromanagement or high-level interference prevent you from doing your job effectively?",
+      "bangla": "মাইক্রোম্যানেজমেন্ট বা উচ্চস্তরের হস্তক্ষেপ كতবার আপনার كাজ كার্যকরভাবে করতে বাধা দেয়؟",
+      "arabic": "كم مرة تمنعك الإدارة الجزئية أو التدخلات عالية المستوى من القيام بعملك بفعالية؟"
+    },
+    {
+      "english": "To what extent do you feel that people on your team deliberately act in a way that undermines your efforts or holds your mistakes against you?",
+      "bangla": "আপনার দলের লোকেরা ইচ্ছাকৃতভাবে আপনার প্রচেষ্টা ك্ষুণ্ণ বা ভুলের জন্য دোষারোপ করে বলে আপনি كتটা মনে করেন؟",
+      "arabic": "إلى أي مدى تشعر أن الأشخاص في فريقك يتصرفون عمدًا بطريقة تقوض جهودك أو تحمل أخطائك ضدك؟"
+    },
+    {
+      "english": "How strongly do you agree that you are comfortable asking your colleagues for help without worrying about being judged?",
+      "bangla": "সহকর্মীদের কাছে سাহায্য চাইতে বিচারের ভয় ছাড়াই س্বাচ্ছন্দ্যবোধ করেন বলে আপনি كتটা একমত؟",
+      "arabic": "ما مدى موافقتك على أنك مرتاح لطلب المساعدة من زملائك دون القلق بشأن الحكم عليك؟"
+    }
+  ],
+  "options": [
+    { "english": "Never", "bangla": "কখনও না", "arabic": "أبدًا" },
+    { "english": "Rarely", "bangla": "কদাচিৎ", "arabic": "نادرًا" },
+    { "english": "Often", "bangla": "প্রায়ই", "arabic": "غالبًا" },
+    { "english": "Always", "bangla": "সবসময়", "arabic": "دائمًا" },
+    { "english": "Severely", "bangla": "তীব্রভাবে", "arabic": "بشدة" },
+    { "english": "Not at all", "bangla": "একদম নয়", "arabic": "على الإطلاق" },
+    { "english": "Slightly", "bangla": "অল্প", "arabic": "قليلاً" },
+    { "english": "Moderately", "bangla": "মধ্যম", "arabic": "بشكل معتدل" },
+    { "english": "Highly", "bangla": "উচ্চ", "arabic": "بدرجة كبيرة" },
+    { "english": "Dissatisfied", "bangla": "অসন্তুষ্ট", "arabic": "غير راضٍ" },
+    { "english": "Slightly Dissatisfied", "bangla": "অল্প অসন্তুষ্ট", "arabic": "غير راضٍ قليلاً" },
+    { "english": "Satisfied", "bangla": "সন্তুষ্ট", "arabic": "راضٍ" },
+    { "english": "Very Satisfied", "bangla": "খুবই সন্তুষ্ট", "arabic": "راضٍ جدًا" },
+    { "english": "Sometimes", "bangla": "কখনও কখনও", "arabic": "أحيانًا" },
+    { "english": "Strongly Disagree", "bangla": "মহাসহমত নই", "arabic": "أعارض بشدة" },
+    { "english": "Disagree", "bangla": "সহমত নই", "arabic": "أعارض" },
+    { "english": "Agree", "bangla": "সহমত", "arabic": "أوافق" },
+    { "english": "Strongly Agree", "bangla": "মহাসহমত", "arabic": "أوافق بشدة" },
+    { "english": "Poorly", "bangla": "খারাপভাবে", "arabic": "سيئ" },
+    { "english": "Somewhat Poorly", "bangla": "আংশিকভাবে খারাপভাবে", "arabic": "سيئ إلى حد ما" },
+    { "english": "Well", "bangla": "ভালভাবে", "arabic": "جيد" },
+    { "english": "Very Well", "bangla": "খুব ভালোভাবে", "arabic": "جيد جدًا" },
+    { "english": "1", "bangla": "১", "arabic": "١" },
+    { "english": "2", "bangla": "২", "arabic": "٢" },
+    { "english": "3", "bangla": "৩", "arabic": "٣" },
+    { "english": "4", "bangla": "৪", "arabic": "٤" },
+    { "english": "Low", "bangla": "নিম্ন", "arabic": "منخفض" },
+    { "english": "Below Average", "bangla": "গড়ের নিচে", "arabic": "أقل من المتوسط" },
+    { "english": "Above Average", "bangla": "গড়ের উপরে", "arabic": "أعلى من المتوسط" },
+    { "english": "High", "bangla": "উচ্চ", "arabic": "مرتفع" },
+    { "english": "Blame", "bangla": "দোষারোপ", "arabic": "اللوم" },
+    { "english": "Criticism", "bangla": "সমালোচনা", "arabic": "النقد" },
+    { "english": "Correction", "bangla": "সংশোধন", "arabic": "التصحيح" },
+    { "english": "Support", "bangla": "সহায়তা", "arabic": "الدعم" },
+    {
+      "english": "Very Uncomfortable",
+      "bangla": "খুব অস্বস্তিকর",
+      "arabic": "غير مريح على الإطلاق"
+    },
+    {
+      "english": "Slightly Uncomfortable",
+      "bangla": "অল্প অস্বস্তিকর",
+      "arabic": "غير مريح قليلاً"
+    },
+    { "english": "Comfortable", "bangla": "স্বস্তিকর", "arabic": "مريح" },
+    { "english": "Very Comfortable", "bangla": "খুবই স্বস্তিকর", "arabic": "مريح للغاية" },
+    { "english": "Not at all safe", "bangla": "একদম নিরাপদ নয়", "arabic": "غير آمن على الإطلاق" },
+    { "english": "Unsafe", "bangla": "অসুরক্ষিত", "arabic": "غير آمن" },
+    { "english": "Safe", "bangla": "নিরাপদ", "arabic": "آمن" },
+    { "english": "Very Safe", "bangla": "খুব নিরাপদ", "arabic": "آمن جدًا" },
+    { "english": "Very Little", "bangla": "খুব কম", "arabic": "قليل جدًا" },
+    { "english": "Mostly", "bangla": "প্রায়শই", "arabic": "في الغالب" },
+    { "english": "Completely", "bangla": "সম্পূর্ণভাবে", "arabic": "تمامًا" },
+    { "english": "Nearly Every Day", "bangla": "প্রায় প্রতিদিন", "arabic": "كل يوم تقريبًا" },
+    {
+      "english": "More than Half the Days",
+      "bangla": "সপ্তাহের অর্ধেকের বেশি",
+      "arabic": "أكثر من نصف الأيام"
+    },
+    { "english": "Several Days", "bangla": "কয়েক দিন", "arabic": "عدة أيام" }
+  ]
+}
