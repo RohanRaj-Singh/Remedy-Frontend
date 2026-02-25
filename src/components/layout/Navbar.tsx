@@ -79,7 +79,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="mt-2 rounded-lg bg-[#f58220]/10 px-4 py-4 shadow-sm backdrop-blur-sm sm:hidden">
+          <div className="mt-2 rounded-lg bg-[#126479]/10 px-4 py-4 shadow-sm backdrop-blur-sm sm:hidden">
             <div className="flex flex-col gap-4">
               <Link
                 href="/"
