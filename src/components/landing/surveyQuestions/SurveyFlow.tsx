@@ -169,7 +169,7 @@ export default function SurveyFlow() {
           </div>
           <div className="h-2.5 w-full rounded-full bg-gray-200">
             <div
-              className="h-2.5 rounded-full bg-[#126479] transition-all duration-300"
+              className="h-2.5 rounded-full bg-[#f58220] transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -192,7 +192,7 @@ export default function SurveyFlow() {
               </div>
               <div className="h-2.5 w-full rounded-full bg-gray-200">
                 <div
-                  className="h-2.5 rounded-full bg-[#126479] transition-all duration-300"
+                  className="h-2.5 rounded-full bg-[#f58220] transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -224,7 +224,7 @@ export default function SurveyFlow() {
             <button
               onClick={handleNext}
               disabled={!currentAnswer || isLoading}
-              className={`inline-flex items-center justify-center gap-3 rounded-full border border-white px-7 py-2 text-xs font-medium transition-all duration-300 hover:scale-105 md:text-lg ${currentAnswer && !isLoading ? "bg-[#126479] text-white hover:bg-[#126479]" : "bg-gray-200 text-gray-400"} ${!currentAnswer || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`inline-flex items-center justify-center gap-3 rounded-full border border-white px-7 py-2 text-xs font-medium transition-all duration-300 hover:scale-105 md:text-lg ${currentAnswer && !isLoading ? "bg-[#f58220] text-white hover:bg-[#f58220]" : "bg-gray-200 text-gray-400"} ${!currentAnswer || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               Next
               <MoveLeft className="h-4 w-4 rotate-180" />
