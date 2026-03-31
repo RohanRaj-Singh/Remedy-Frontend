@@ -4,8 +4,8 @@
 import LanguageToggle from "@/components/toggles/LanguageToggle";
 import RadioOption from "@/components/ui/RadioOption";
 import { translateQuestion } from "@/data/translateQuestion";
-import { useSubmitResultMutation } from "@/redux/api/apis/surveyApi";
-import { setNextQuestion, setSurveyData } from "@/redux/api/slice/surveySlice";
+import { useSubmitResultMutation, useMarkInviteCompleteMutation } from "@/redux/api/apis/surveyApi";
+import { setNextQuestion, setSurveyData, setInviteToken } from "@/redux/api/slice/surveySlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
@@ -56,9 +56,11 @@ interface Survey {
 export default function SurveyFlow() {
   const dispatch = useAppDispatch();
   const { survey, nextQuestion } = useAppSelector((state) => state.survey);
+  const inviteToken = useAppSelector((state) => state.survey.inviteToken);
   const [isEnglish, setIsEnglish] = useState(false);
   const { language } = useAppSelector((state) => state.ui);
   const [submitResult, { isLoading }] = useSubmitResultMutation();
+  const [markInviteComplete] = useMarkInviteCompleteMutation();
 
   const [currentAnswer, setCurrentAnswer] = useState<string | null>(null);
 
@@ -143,6 +145,20 @@ export default function SurveyFlow() {
       });
     }
   };
+
+  // Fire mark-complete when survey finishes (token flow only)
+  useEffect(() => {
+    if (stage === "completed" && inviteToken) {
+      markInviteComplete({
+        token: inviteToken,
+        ...(survey?._id ? { surveyId: survey._id } : {}),
+      })
+        .unwrap()
+        .catch(() => { /* fire-and-forget */ });
+      dispatch(setInviteToken(null));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage]);
 
   if (stage === "completed" || !survey || !currentQuestion) {
     return <ThankYou />;

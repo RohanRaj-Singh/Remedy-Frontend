@@ -6,6 +6,7 @@ import {
   BarChart3,
   ChartLine,
   Flame,
+  Mail,
   Menu,
   Shield,
   Smile,
@@ -40,6 +41,11 @@ const staticNavigation = [
     name: "Satisfaction & Engagement",
     href: "/organizationDashboard/satisfaction-engagement",
     icon: Smile,
+  },
+  {
+    name: "Email Invitations",
+    href: "/organizationDashboard/email-invitations",
+    icon: Mail,
   },
 ];
 

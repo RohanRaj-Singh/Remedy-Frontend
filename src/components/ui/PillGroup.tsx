@@ -13,6 +13,7 @@ interface RadioGroupProps {
     value: string;
     onChange: (value: string) => void;
     required?: boolean;
+    disabled?: boolean;
 }
 
 const PillGroup: React.FC<RadioGroupProps> = ({
@@ -21,6 +22,7 @@ const PillGroup: React.FC<RadioGroupProps> = ({
     value,
     onChange,
     required = false,
+    disabled = false,
 }) => {
     const { t } = useTranslation("common");
     
@@ -31,7 +33,7 @@ const PillGroup: React.FC<RadioGroupProps> = ({
                 return (
                     <label
                         key={option.value}
-                        className={`cursor-pointer rounded-full px-6 py-2 text-sm md:text-base font-medium border transition-all duration-200 
+                        className={`${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} rounded-full px-6 py-2 text-sm md:text-base font-medium border transition-all duration-200 
               ${isSelected
                                 ? "bg-[#f37820] text-white border-[#f37820]"
                                 : "bg-white text-gray-800 border-gray-300 hover:border-[#f37820]"
@@ -42,8 +44,9 @@ const PillGroup: React.FC<RadioGroupProps> = ({
                             name={name}
                             value={option.value}
                             checked={isSelected}
-                            onChange={() => onChange(option.value)}
+                            onChange={() => { if (!disabled) onChange(option.value); }}
                             required={required}
+                            disabled={disabled}
                             className="hidden"
                         />
                         {option.label.startsWith("survey.") ? t(option.label) : option.label}
