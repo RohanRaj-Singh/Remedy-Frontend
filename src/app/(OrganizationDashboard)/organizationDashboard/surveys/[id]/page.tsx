@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { getServerApiBaseUrl } from "@/lib/api-config";
 import { Briefcase, Calendar, MapPin, User } from "lucide-react";
 
 type Props = {
@@ -12,7 +13,7 @@ type Props = {
 export default async function SurveyDetail({ params }: Props) {
   const { id } = await params;
 
-  const res = await fetch(`${process.env.API_BASE_URL}/api/survey/${id}/result`, {
+  const res = await fetch(`${getServerApiBaseUrl()}/api/survey/${id}/result`, {
     cache: "no-store",
   });
 
