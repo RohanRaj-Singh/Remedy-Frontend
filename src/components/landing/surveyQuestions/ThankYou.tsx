@@ -6,7 +6,7 @@ export default function ThankYou() {
         <div className="min-h-screen bg-gray-50 pt-20 w-full flex flex-col items-center justify-center p-4">
             <div className="w-full max-w-4xl min-h-[30vh] mx-auto">
                 <div className="bg-white py-8 md:py-24 rounded-xl shadow-lg text-center">
-                    <div className={`w-12 h-12 bg-[#f58220] rounded-full mx-auto mb-4 flex items-center justify-center`}>
+                    <div className={`w-12 h-12 bg-[#126479] rounded-full mx-auto mb-4 flex items-center justify-center`}>
                         <CircleCheckBig className="w-6 h-6 text-white" />
                     </div>
                     <h1 className="text-2xl font-bold text-gray-800 mb-4">Thank You!</h1>

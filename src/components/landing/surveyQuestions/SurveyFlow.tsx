@@ -224,7 +224,7 @@ export default function SurveyFlow() {
             <button
               onClick={handleNext}
               disabled={!currentAnswer || isLoading}
-              className={`inline-flex items-center justify-center gap-3 rounded-full border border-white px-7 py-2 text-xs font-medium transition-all duration-300 hover:scale-105 md:text-lg ${currentAnswer && !isLoading ? "bg-[#f58220] text-white hover:bg-[#f58220]" : "bg-gray-200 text-gray-400"} ${!currentAnswer || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`inline-flex items-center justify-center gap-3 rounded-full border border-white px-7 py-2 text-xs font-medium transition-all duration-300 hover:scale-105 md:text-lg ${currentAnswer && !isLoading ? "bg-[#126479] text-white hover:bg-[#f58220]" : "bg-gray-200 text-gray-400"} ${!currentAnswer || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               Next
               <MoveLeft className="h-4 w-4 rotate-180" />

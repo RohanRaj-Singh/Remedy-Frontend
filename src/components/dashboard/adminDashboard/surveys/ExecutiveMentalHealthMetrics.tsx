@@ -77,7 +77,7 @@ export default function ExecutiveMentalHealthMetrics({
       <CardContent className="space-y-6 p-0 md:pt-6">
         <ExecutiveHealthMetricsGallery metrics={metrics} />
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-1">
+        {/* <div className="grid grid-cols-1 gap-8 lg:grid-cols-1">
           <Card className="border-0 shadow-xl">
             <CardHeader className="rounded-t-lg">
               <CardTitle className="flex items-center gap-2 text-lg md:text-2xl">
@@ -123,7 +123,7 @@ export default function ExecutiveMentalHealthMetrics({
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

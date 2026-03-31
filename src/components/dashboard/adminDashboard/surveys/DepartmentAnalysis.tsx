@@ -181,7 +181,7 @@ export default function DepartmentAnalysis({
 
       <CardContent className="space-y-6 p-0 md:pt-6">
         <div className="grid grid-cols-1 gap-8">
-          <Card className="border-0 shadow-xl">
+          {/* <Card className="border-0 shadow-xl">
             <CardHeader className="rounded-t-lg">
               <CardTitle className="flex items-center gap-2 text-lg md:text-2xl">
                 <BarChart className="h-6 w-6" />
@@ -205,20 +205,20 @@ export default function DepartmentAnalysis({
                   <Legend />
                   <Bar
                     dataKey="risk"
-                    name="Risk Score"
+                    name="Negative Score"
                     fill={CHART_COLORS.risk}
                     radius={[4, 4, 0, 0]}
                   />
                   <Bar
                     dataKey="satisfaction"
-                    name="Satisfaction %"
+                    name="Positive Score"
                     fill={CHART_COLORS.satisfaction}
                     radius={[4, 4, 0, 0]}
                   />
                 </RechartsBarChart>
               </ResponsiveContainer>
             </CardContent>
-          </Card>
+          </Card> */}
 
           <Card className="border-0 shadow-xl">
             <CardHeader className="rounded-t-lg">
@@ -228,20 +228,20 @@ export default function DepartmentAnalysis({
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 pb-5 md:p-6">
-              <div className="relative mx-auto h-64">
+              <div className="relative mx-auto h-100 ">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={participantsDistribution}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
+                      innerRadius={120}
+                      outerRadius={135}
                       paddingAngle={2}
                       dataKey="value"
                       stroke="#fff"
                       strokeWidth={2}
-                      label={({ name, percentage }) => `${name}: ${percentage}%`}
+                      // label={({ name, percentage }) => `${name.split('_')[0]}: ${percentage}%`}
                       labelLine={false}
                     >
                       {participantsDistribution.map((entry, index) => (

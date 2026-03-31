@@ -69,7 +69,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
       case "purple":
         return "bg-purple-500";
       case "yellow":
-        return "bg-yellow-500";
+        return "bg-[#126479]";
       case "red":
         return "bg-red-500";
       case "green":

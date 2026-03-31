@@ -104,8 +104,8 @@ const LanguageToggle: React.FC<LanguageToggleProps> = ({ onLanguageChange }) => 
         <span
           className={`sm:text-md z-10 hidden h-7 w-10 items-center justify-center rounded-full border-4 border-white text-xs font-bold text-white transition-transform duration-300 sm:h-14 sm:w-24 md:flex ${
             language === "en"
-              ? "translate-x-10 bg-[#f37820] sm:translate-x-23"
-              : "-translate-x-0.5 bg-[#f37820] sm:-translate-x-1"
+              ? "translate-x-10 bg-[#126479] sm:translate-x-23"
+              : "-translate-x-0.5 bg-[#1386a3] sm:-translate-x-1"
           }`}
         >
           {getCurrentLanguageLabel() === "English" ? "English" : "Arabic"}
@@ -126,8 +126,8 @@ const LanguageToggle: React.FC<LanguageToggleProps> = ({ onLanguageChange }) => 
         <span
           className={`sm:text-md z-10 flex h-7 w-10 items-center justify-center rounded-full border-2 border-white text-xs font-bold text-white transition-transform duration-300 sm:h-14 sm:w-24 md:hidden ${
             language === "en"
-              ? "translate-x-10 bg-[#f37820] sm:translate-x-23"
-              : "-translate-x-0.5 bg-[#f37820] sm:-translate-x-1"
+              ? "translate-x-10 bg-[#126479] sm:translate-x-23"
+              : "-translate-x-0.5 bg-[#1386a3] sm:-translate-x-1"
           }`}
         >
           {getNextLanguageShortLabel()}
