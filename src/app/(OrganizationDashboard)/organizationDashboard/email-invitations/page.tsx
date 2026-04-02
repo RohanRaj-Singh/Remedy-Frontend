@@ -18,16 +18,42 @@ import {
   Users,
   XCircle,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-
-// Use the fixed organization ID (same pattern as the rest of the dashboard)
-const ORG_ID = "6902bda0c0f78f02d2067668";
+import type { RootState } from "@/redux/store/store";
 
 type Tab = "upload" | "send" | "monitor";
 
+const getOrganizationIdFromToken = (token: string | null): string | null => {
+  if (!token) return null;
+
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) return null;
+
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+    const decoded = JSON.parse(atob(padded));
+
+    return decoded?._id ?? null;
+  } catch {
+    return null;
+  }
+};
+
 export default function EmailInvitationsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("upload");
+  const token = useSelector((state: RootState) => state.auth.token as string | null);
+  const organizationId = useMemo(() => getOrganizationIdFromToken(token), [token]);
+
+  if (!organizationId) {
+    return (
+      <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        Organization session is invalid. Please logout and login again.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -63,9 +89,9 @@ export default function EmailInvitationsPage() {
       </div>
 
       {/* Tab Content */}
-      {activeTab === "upload" && <UploadExcelTab />}
-      {activeTab === "send" && <SendInvitationsTab />}
-      {activeTab === "monitor" && <MonitorStatusTab />}
+      {activeTab === "upload" && <UploadExcelTab organizationId={organizationId} />}
+      {activeTab === "send" && <SendInvitationsTab organizationId={organizationId} />}
+      {activeTab === "monitor" && <MonitorStatusTab organizationId={organizationId} />}
     </div>
   );
 }
@@ -73,7 +99,7 @@ export default function EmailInvitationsPage() {
 /* ─────────────────────────────────────────────
    Tab 1: Upload Excel
 ───────────────────────────────────────────── */
-function UploadExcelTab() {
+function UploadExcelTab({ organizationId }: { organizationId: string }) {
   const [uploadExcel, { isLoading }] = useUploadEmployeeExcelMutation();
   const [result, setResult] = useState<null | {
     totalRows: number;
@@ -100,7 +126,7 @@ function UploadExcelTab() {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("organizationId", ORG_ID);
+    formData.append("organizationId", organizationId);
 
     try {
       const res = await uploadExcel(formData).unwrap();
@@ -209,7 +235,7 @@ function UploadExcelTab() {
 /* ─────────────────────────────────────────────
    Tab 2: Send Invitations
 ───────────────────────────────────────────── */
-function SendInvitationsTab() {
+function SendInvitationsTab({ organizationId }: { organizationId: string }) {
   const [sendInvitations, { isLoading }] = useSendInvitationsMutation();
   const [onlyPending, setOnlyPending] = useState(true);
   const [result, setResult] = useState<null | {
@@ -234,7 +260,7 @@ function SendInvitationsTab() {
     if (!confirm.isConfirmed) return;
 
     try {
-      const res = await sendInvitations({ organizationId: ORG_ID, onlyPending }).unwrap();
+      const res = await sendInvitations({ organizationId, onlyPending }).unwrap();
       setResult(res?.data ?? null);
       Swal.fire({ icon: "success", title: "Done!", text: `${res?.data?.sent ?? 0} invitation(s) sent.`, timer: 2000, showConfirmButton: false });
     } catch (err: any) {
@@ -330,8 +356,8 @@ function SendInvitationsTab() {
 /* ─────────────────────────────────────────────
    Tab 3: Monitor Status
 ───────────────────────────────────────────── */
-function MonitorStatusTab() {
-  const { data, isLoading, isFetching, refetch } = useGetInviteStatusQuery(ORG_ID);
+function MonitorStatusTab({ organizationId }: { organizationId: string }) {
+  const { data, isLoading, isFetching, refetch } = useGetInviteStatusQuery(organizationId);
   const summary = data?.data?.summary;
   const invites: any[] = data?.data?.invites ?? [];
 

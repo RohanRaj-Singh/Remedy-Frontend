@@ -32,10 +32,13 @@ const genderValueMap: { [key: string]: string } = {
 };
 
 const ageValueMap: { [key: string]: string } = {
-  "survey.age.options.age18to24": "18-24",
-  "survey.age.options.age25to34": "25-34",
-  "survey.age.options.age35to44": "35-44",
-  "survey.age.options.age45to54": "45-54",
+  "18-25": "18-24",
+  "18-24": "18-24",
+  "25-34": "25-34",
+  "35-44": "35-44",
+  "44-54": "45-54",
+  "45-54": "45-54",
+  "55+": "55+",
 };
 
 const seniorityValueMap: { [key: string]: string } = {
@@ -48,6 +51,27 @@ const locationDisplayMap: { [key: string]: string } = {
   block60: "B60",
   msusundam: "Musandam",
   headOffice: "Muscat",
+};
+
+const normalizePrefillLocation = (value?: string) => {
+  if (!value) return "";
+  const normalized = value.trim().toLowerCase();
+  if (["muscat", "head office", "head_office", "headoffice"].includes(normalized)) return "headOffice";
+  if (["b60", "block 60", "block60"].includes(normalized)) return "block60";
+  if (["musandam", "msusundam", "musundam"].includes(normalized)) return "msusundam";
+  return value;
+};
+
+const normalizePrefillGender = (value?: string) => {
+  if (!value) return "";
+  const normalized = value.trim().toLowerCase();
+  if (["male", "female", "other"].includes(normalized)) return normalized;
+  return value;
+};
+
+const normalizePrefillAge = (value?: string) => {
+  if (!value) return "";
+  return ageValueMap[value] || value;
 };
 
 export default function SurveyPage() {
@@ -85,9 +109,9 @@ export default function SurveyPage() {
         stream: p.stream ?? prev.stream,
         function: p.function ?? prev.function,
         department: p.department ?? prev.department,
-        location: p.location ?? prev.location,
-        age: p.age ?? prev.age,
-        gender: p.gender ?? prev.gender,
+        location: normalizePrefillLocation(p.location) || prev.location,
+        age: normalizePrefillAge(p.age) || prev.age,
+        gender: normalizePrefillGender(p.gender) || prev.gender,
       }));
     }
   }, [sessionData]);
