@@ -71,7 +71,16 @@ const normalizePrefillGender = (value?: string) => {
 
 const normalizePrefillAge = (value?: string) => {
   if (!value) return "";
-  return ageValueMap[value] || value;
+  if (ageValueMap[value]) return ageValueMap[value];
+  const num = parseInt(value, 10);
+  if (!isNaN(num)) {
+    if (num < 25) return "18-24";
+    if (num < 35) return "25-34";
+    if (num < 45) return "35-44";
+    if (num < 55) return "45-54";
+    return "55+";
+  }
+  return value;
 };
 
 export default function SurveyPage() {
