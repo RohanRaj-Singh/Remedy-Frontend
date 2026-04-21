@@ -1,11 +1,11 @@
 "use client";
 
+import DashboardFilters, { FilterState, initialFilterState } from "@/components/dashboard/filter/DashboardFilters";
 import AgeGroupAnalysis from "@/components/dashboard/adminDashboard/surveys/AgeGroupAnalysis";
 import DepartmentAnalysis from "@/components/dashboard/adminDashboard/surveys/DepartmentAnalysis";
-import HierarchicalFilter from "@/components/dashboard/filter/HierarchicalFilter";
+import ExecutiveMentalHealthMetrics from "@/components/dashboard/adminDashboard/surveys/ExecutiveMentalHealthMetrics";
 import { Card } from "@/components/ui/card";
-import SelectInput from "@/components/ui/SelectInput";
-import { ageOptions, departments, genderOptions, locationOptions } from "@/data/survey";
+import AutoStepLoader from "@/components/ui/AutoStepLoader";
 import { useGetAllSurveyStatisticsForOrganizationQuery } from "@/redux/api/apis/surveyApi";
 import {
   Flame,
@@ -16,7 +16,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import {
   Bar,
   CartesianGrid,
@@ -29,8 +29,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import ExecutiveMentalHealthMetrics from "../dashboard/adminDashboard/surveys/ExecutiveMentalHealthMetrics";
-import AutoStepLoader from "../ui/AutoStepLoader";
 
 interface DashboardDomainAverage {
   averageRiskScore: number;
@@ -55,16 +53,6 @@ interface ScoreCardType extends MentalHealthMetric {
   icon: ReactNode;
 }
 
-interface FilterState {
-  stream: string;
-  function: string;
-  department: string;
-  age: string;
-  gender: string;
-  location: string;
-}
-
-// Vibrant color palette for risk levels
 const COLORS = {
   noRisk: "#10b981",
   lowRisk: "#3b82f6",
@@ -115,245 +103,48 @@ function ScoreCard({
 }
 
 export default function ExecutiveSummaryComponent() {
-  const [filters, setFilters] = useState<FilterState>({
-    stream: "",
-    function: "",
-    department: "",
-    age: "",
-    gender: "",
-    location: "",
-  });
+  const [filters, setFilters] = useState<FilterState>(initialFilterState);
+  const [appliedFilters, setAppliedFilters] = useState<FilterState>(initialFilterState);
+  const [filterKey, setFilterKey] = useState(0);
 
-  // State to hold parsed stream, function, and department values
-  const [parsedFilters, setParsedFilters] = useState({
-    stream: "",
-    fn: "",
-    department: "",
-  });
-
-  useEffect(() => {
-    // Extract stream, function, and department from the hierarchical department filter
-    let stream = "";
-    let fn = "";
-    let department = "";
-
-    if (filters.department) {
-      const parts = filters.department.split(" > ");
-      // Only set values if they exist in the split parts
-      if (parts.length >= 1) stream = parts[0];
-      if (parts.length >= 2) fn = parts[1];
-      if (parts.length >= 3) department = parts[2];
-    }
-
-    // Update the parsed filters state
-    setParsedFilters({ stream, fn, department });
-  }, [filters]);
-
-  // Use the same API hook as the surveys page
   const { data, isLoading, isFetching, isError } = useGetAllSurveyStatisticsForOrganizationQuery({
-    stream: parsedFilters.stream || undefined,
-    fn: parsedFilters.fn || undefined,
-    department: parsedFilters.department || undefined,
-    age: filters.age || undefined,
-    gender: filters.gender || undefined,
-    location: filters.location || undefined,
+    stream: appliedFilters.stream || undefined,
+    fn: appliedFilters.fn || undefined,
+    department: appliedFilters.department || undefined,
+    age: appliedFilters.age || undefined,
+    gender: appliedFilters.gender || undefined,
+    location: appliedFilters.location || undefined,
   });
 
   const apiData = data?.data?.data;
 
-  // Handle filter changes
   const handleFilterChange = (key: keyof FilterState, value: string) => {
-    // When stream changes, reset function and department
-    if (key === "stream") {
-      setFilters((prev) => ({
-        ...prev,
-        stream: value,
-        function: "",
-        department: "",
-      }));
-    }
-    // When function changes, reset department
-    else if (key === "function") {
-      setFilters((prev) => ({
-        ...prev,
-        function: value,
-        department: "",
-      }));
-    }
-    // For all other filters, just update the specific value
-    else {
-      setFilters((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-    }
-  };
-
-  // Reset all filters
-  const resetFilters = () => {
-    setFilters({
-      stream: "",
-      function: "",
-      department: "",
-      age: "",
-      gender: "",
-      location: "",
-    });
-  };
-
-  // Check if any filter is applied
-  const hasActiveFilters = Object.values(filters).some((v) => v !== "");
-
-  // Check if rollUp is active (matching clinical risk index page)
-
-  // Mental health metrics data for the MentalHealthMetrics component
-  const mentalHealthMetricsForComponent = apiData?.mentalHealthMetrics
-    ? apiData.mentalHealthMetrics.map((metric: MentalHealthMetric) => ({
-        domain: metric.domain,
-        avgRisk: metric.dashboardDomainAverage.averageRiskScore,
-        riskPercent: metric.dashboardDomainAverage.averageRiskScore,
-        surveyCount: metric.participants,
-        highRiskCount: metric.highRiskSurveyCount,
-        nonHighRiskCount: metric.nonHighRiskSurveyCount,
-        satisfactionScore: metric.dashboardDomainAverage.averageSatisfactionScore,
-        riskLevel: metric.dashboardDomainAverage.averageSatisfactionStatus,
-      }))
-    : [];
-
-  // Domain data for charts
-  const domainChartData = apiData?.mentalHealthMetrics
-    ? apiData.mentalHealthMetrics.map((metric: MentalHealthMetric) => ({
-        name: metric.domain,
-        riskPercent: metric.dashboardDomainAverage.averageRiskScore,
-        satisfactionScore: metric.dashboardDomainAverage.averageSatisfactionScore,
-        highRiskCount: metric.highRiskSurveyCount,
-        avgRisk: metric.dashboardDomainAverage.averageRiskScore,
-      }))
-    : [];
-
-  // Age distribution data
-  const ageChartData = apiData?.ageStats
-    ? apiData.ageStats.map(
-        (age: {
-          ageGroup: string;
-          people: number;
-          peoplePercent: number;
-          riskScore: number;
-          satisfactionScore: number;
-        }) => ({
-          name: age.ageGroup,
-          participants: age.people,
-          riskScore: age.riskScore,
-          satisfaction: age.satisfactionScore,
-        }),
-      )
-    : [];
-
-  // Gender distribution data
-  const genderChartData = apiData?.genderStats
-    ? apiData.genderStats.map(
-        (gender: {
-          gender: string;
-          people: number;
-          peoplePercent: number;
-          riskScore: number;
-          satisfactionScore: number;
-        }) => ({
-          name: gender.gender,
-          participants: gender.people,
-          riskScore: gender.riskScore,
-          satisfaction: gender.satisfactionScore,
-          percentage: gender.peoplePercent,
-        }),
-      )
-    : [];
-
-  // Stream performance data
-  const streamChartData = apiData?.streamStats
-    ? apiData.streamStats.map(
-        (dept: {
-          stream: string;
-          totalResponses: number;
-          departmentPercent: number;
-          avgRisk: number;
-          satisfactionScore: number;
-          highRiskCount: number;
-        }) => ({
-          name: dept.stream,
-          satisfaction: dept.satisfactionScore,
-          risk: dept.avgRisk,
-          responses: dept.totalResponses,
-          highRiskCount: dept.highRiskCount,
-        }),
-      )
-    : [];
-
-  // Function performance data
-  const functionChartData = apiData?.functionStats
-    ? apiData.functionStats.map(
-        (func: {
-          function: string;
-          totalResponses: number;
-          functionPercent: number;
-          avgRisk: number;
-          satisfactionScore: number;
-          highRiskCount: number;
-        }) => ({
-          name: func.function,
-          satisfaction: func.satisfactionScore,
-          risk: func.avgRisk,
-          responses: func.totalResponses,
-          highRiskCount: func.highRiskCount,
-        }),
-      )
-    : [];
-
-  // Department performance data
-  const departmentChartData = apiData?.departmentStats
-    ? apiData.departmentStats.map(
-        (dept: {
-          department: string;
-          totalResponses: number;
-          departmentPercent: number;
-          avgRisk: number;
-          satisfactionScore: number;
-          highRiskCount: number;
-        }) => ({
-          name: dept.department,
-          satisfaction: dept.satisfactionScore,
-          risk: dept.avgRisk,
-          responses: dept.totalResponses,
-          highRiskCount: dept.highRiskCount,
-        }),
-      )
-    : [];
-
-  // Risk distribution pie data
-  let noRiskCount = 0;
-  let lowRiskCount = 0;
-  let mediumRiskCount = 0;
-  let highRiskCount = 0;
-
-  if (apiData?.mentalHealthMetrics) {
-    apiData.mentalHealthMetrics.forEach((metric: MentalHealthMetric) => {
-      if (metric.dashboardDomainAverage.averageSatisfactionScore >= 85) {
-        noRiskCount += metric.participants;
-      } else if (metric.dashboardDomainAverage.averageSatisfactionScore >= 70) {
-        lowRiskCount += metric.participants;
-      } else if (metric.dashboardDomainAverage.averageSatisfactionScore >= 50) {
-        mediumRiskCount += metric.participants;
-      } else {
-        highRiskCount += metric.participants;
+    setFilters((prev) => {
+      const updated = { ...prev, [key]: value };
+      if (key === "stream") {
+        updated.location = "";
+        updated.fn = "";
+        updated.department = "";
+      } else if (key === "location") {
+        updated.fn = "";
+        updated.department = "";
+      } else if (key === "fn") {
+        updated.department = "";
       }
+      return updated;
     });
-  }
+  };
 
-  const riskDistributionData = [
-    { name: "No Risk", value: noRiskCount, color: COLORS.noRisk },
-    { name: "Low Risk", value: lowRiskCount, color: COLORS.lowRisk },
-    { name: "Medium Risk", value: mediumRiskCount, color: COLORS.mediumRisk },
-    { name: "High Risk", value: highRiskCount, color: COLORS.highRisk },
-  ];
+  const handleApplyFilters = useCallback(() => {
+    setAppliedFilters(filters);
+    setFilterKey(prev => prev + 1);
+  }, [filters]);
+
+  const resetFilters = () => {
+    setFilters(initialFilterState);
+    setAppliedFilters(initialFilterState);
+    setFilterKey(prev => prev + 1);
+  };
 
   if (isLoading || isFetching) {
     return (
@@ -387,18 +178,119 @@ export default function ExecutiveSummaryComponent() {
     }
   });
 
-  const overallSatisfaction =
-    mentalHealthMetrics.reduce(
-      (acc: number, current: MentalHealthMetric) => acc + current.satisfiedScore,
-      0,
-    ) / mentalHealthMetrics.length;
+  const mentalHealthMetricsForComponent = apiData?.mentalHealthMetrics
+    ? apiData.mentalHealthMetrics.map((metric: MentalHealthMetric) => ({
+        domain: metric.domain,
+        avgRisk: metric.dashboardDomainAverage.averageRiskScore,
+        riskPercent: metric.dashboardDomainAverage.averageRiskScore,
+        surveyCount: metric.participants,
+        highRiskCount: metric.highRiskSurveyCount,
+        nonHighRiskCount: metric.nonHighRiskSurveyCount,
+        satisfactionScore: metric.dashboardDomainAverage.averageSatisfactionScore,
+        riskLevel: metric.dashboardDomainAverage.averageSatisfactionStatus,
+      }))
+    : [];
+
+  const domainChartData = apiData?.mentalHealthMetrics
+    ? apiData.mentalHealthMetrics.map((metric: MentalHealthMetric) => ({
+        name: metric.domain,
+        riskPercent: metric.dashboardDomainAverage.averageRiskScore,
+        satisfactionScore: metric.dashboardDomainAverage.averageSatisfactionScore,
+        highRiskCount: metric.highRiskSurveyCount,
+        avgRisk: metric.dashboardDomainAverage.averageRiskScore,
+      }))
+    : [];
+
+  const ageChartData = apiData?.ageStats
+    ? apiData.ageStats.map(
+        (age: { ageGroup: string; people: number; peoplePercent: number; riskScore: number; satisfactionScore: number }) => ({
+          name: age.ageGroup,
+          participants: age.people,
+          riskScore: age.riskScore,
+          satisfaction: age.satisfactionScore,
+        }),
+      )
+    : [];
+
+  const genderChartData = apiData?.genderStats
+    ? apiData.genderStats.map(
+        (gender: { gender: string; people: number; peoplePercent: number; riskScore: number; satisfactionScore: number }) => ({
+          name: gender.gender,
+          participants: gender.people,
+          riskScore: gender.riskScore,
+          satisfaction: gender.satisfactionScore,
+          percentage: gender.peoplePercent,
+        }),
+      )
+    : [];
+
+  const streamChartData = apiData?.streamStats
+    ? apiData.streamStats.map(
+        (dept: { stream: string; totalResponses: number; departmentPercent: number; avgRisk: number; satisfactionScore: number; highRiskCount: number }) => ({
+          name: dept.stream,
+          satisfaction: dept.satisfactionScore,
+          risk: dept.avgRisk,
+          responses: dept.totalResponses,
+          highRiskCount: dept.highRiskCount,
+        }),
+      )
+    : [];
+
+  const functionChartData = apiData?.functionStats
+    ? apiData.functionStats.map(
+        (func: { function: string; totalResponses: number; functionPercent: number; avgRisk: number; satisfactionScore: number; highRiskCount: number }) => ({
+          name: func.function,
+          satisfaction: func.satisfactionScore,
+          risk: func.avgRisk,
+          responses: func.totalResponses,
+          highRiskCount: func.highRiskCount,
+        }),
+      )
+    : [];
+
+  const departmentChartData = apiData?.departmentStats
+    ? apiData.departmentStats.map(
+        (dept: { department: string; totalResponses: number; departmentPercent: number; avgRisk: number; satisfactionScore: number; highRiskCount: number }) => ({
+          name: dept.department,
+          satisfaction: dept.satisfactionScore,
+          risk: dept.avgRisk,
+          responses: dept.totalResponses,
+          highRiskCount: dept.highRiskCount,
+        }),
+      )
+    : [];
+
+  let noRiskCount = 0;
+  let lowRiskCount = 0;
+  let mediumRiskCount = 0;
+  let highRiskCount = 0;
+
+  if (apiData?.mentalHealthMetrics) {
+    apiData.mentalHealthMetrics.forEach((metric: MentalHealthMetric) => {
+      if (metric.dashboardDomainAverage.averageSatisfactionScore >= 85) {
+        noRiskCount += metric.participants;
+      } else if (metric.dashboardDomainAverage.averageSatisfactionScore >= 70) {
+        lowRiskCount += metric.participants;
+      } else if (metric.dashboardDomainAverage.averageSatisfactionScore >= 50) {
+        mediumRiskCount += metric.participants;
+      } else {
+        highRiskCount += metric.participants;
+      }
+    });
+  }
+
+  const riskDistributionData = [
+    { name: "No Risk", value: noRiskCount, color: COLORS.noRisk },
+    { name: "Low Risk", value: lowRiskCount, color: COLORS.lowRisk },
+    { name: "Medium Risk", value: mediumRiskCount, color: COLORS.mediumRisk },
+    { name: "High Risk", value: highRiskCount, color: COLORS.highRisk },
+  ];
 
   const isRollUpActiveFlag = data?.data?.data?.rollUp || false;
 
   return (
     <main className="min-h-screen">
       <div className="mx-auto px-4 py-8 md:px-8">
-        {/* Organization Header */}
         <div className="mb-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div>
@@ -407,132 +299,41 @@ export default function ExecutiveSummaryComponent() {
               </h1>
               <p className="text-muted-foreground mt-2">Organization Survey Statistics</p>
             </div>
-            <div className="flex items-center gap-3">
-              {hasActiveFilters && (
-                <button
-                  onClick={resetFilters}
-                  className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-                >
-                  Reset Filters
-                </button>
-              )}
-            </div>
           </div>
 
-          {/* Filters */}
-          <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-4">
-            <div className="col-span-1 lg:col-span-4">
-              <HierarchicalFilter
-                value={filters.department || ""}
-                onChange={(value: string) => handleFilterChange("department", value)}
-                departments={departments}
-                placeholder="Bulk Filter by Stream, Function, Department"
-              />
-            </div>
-
-            <SelectInput
-              value={filters.location}
-              onChange={(value) => handleFilterChange("location", value)}
-              options={locationOptions}
-              placeholder="All Locations"
+<DashboardFilters
+              key={filterKey}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onApply={handleApplyFilters}
+              onReset={resetFilters}
+              isLoading={isFetching}
+              rollUpActive={isRollUpActiveFlag}
             />
-
-            {/* Age Selection */}
-            <SelectInput
-              value={filters.age}
-              onChange={(value) => handleFilterChange("age", value)}
-              options={ageOptions}
-              placeholder="All Ages"
-            />
-
-            {/* Gender Selection */}
-            <SelectInput
-              value={filters.gender}
-              onChange={(value) => handleFilterChange("gender", value)}
-              options={genderOptions}
-              placeholder="All Genders"
-            />
-          </div>
-
-          {/* Active Filter Pills */}
-          {hasActiveFilters && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {filters.stream && (
-                <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-                  Stream: {filters.stream}
-                </span>
-              )}
-              {filters.function && (
-                <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-800">
-                  Function: {filters.function}
-                </span>
-              )}
-              {filters.department && apiData?.appliedFilters?.includes("unitDepartment") && (
-                <span className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm text-purple-800">
-                  Department: {filters.department}
-                </span>
-              )}
-              {filters.age && apiData?.appliedFilters?.includes("age") && (
-                <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm text-green-800">
-                  Age: {filters.age}
-                </span>
-              )}
-              {filters.gender && apiData?.appliedFilters?.includes("gender") && (
-                <span className="inline-flex items-center rounded-full bg-pink-100 px-3 py-1 text-sm text-pink-800">
-                  Gender: {filters.gender}
-                </span>
-              )}
-              {filters.location && apiData?.appliedFilters?.includes("location") && (
-                <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm text-amber-800">
-                  Location: {filters.location}
-                </span>
-              )}
-
-              {/* Roll Up / Actual Badge */}
-              <span
-                className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold ${
-                  isRollUpActiveFlag
-                    ? "bg-indigo-100 text-indigo-800"
-                    : "bg-emerald-100 text-emerald-800"
-                }`}
-              >
-                {isRollUpActiveFlag ? "Roll Up" : "Actual"}
-              </span>
-            </div>
-          )}
         </div>
 
         <div className="space-y-8">
-          {/* Key Metrics Grid */}
           <section>
             <h2 className="text-foreground mb-4 text-lg font-semibold">
               Key Performance Indicators
             </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
-              {indices
-                // .filter(
-                //   (item: ScoreCardType) =>
-                //     !["Psychological Safety Index", "Satisfaction & Engagement"].includes(
-                //       item.domain,
-                //     ),
-                // )
-                .map((index: ScoreCardType) => (
-                  <ScoreCard
-                    key={index.domain}
-                    title={index.domain}
-                    score={
-                      index.domain == "Clinical Risk Index"
-                        ? index?.dashboardDomainAverage?.averageRiskScore
-                        : index?.dashboardDomainAverage?.averageSatisfactionScore
-                    }
-                    icon={index.icon}
-                    participantCount={apiData.totalParticipants}
-                  />
-                ))}
+              {indices.map((index: ScoreCardType) => (
+                <ScoreCard
+                  key={index.domain}
+                  title={index.domain}
+                  score={
+                    index.domain == "Clinical Risk Index"
+                      ? index?.dashboardDomainAverage?.averageRiskScore
+                      : index?.dashboardDomainAverage?.averageSatisfactionScore
+                  }
+                  icon={index.icon}
+                  participantCount={apiData.totalParticipants}
+                />
+              ))}
             </div>
           </section>
 
-          {/* Summary Statistics */}
           <section>
             <h2 className="text-foreground mb-4 text-lg font-semibold">Summary Statistics</h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
@@ -550,21 +351,16 @@ export default function ExecutiveSummaryComponent() {
             </div>
           </section>
 
-          {/* Mental Health Metrics Component with Circular Charts */}
           <ExecutiveMentalHealthMetrics
             metrics={mentalHealthMetricsForComponent}
-            // unitName={filters.department || "All Departments"}
             domainChartData={domainChartData}
             riskDistributionData={riskDistributionData}
           />
 
-          {/* Age Group Analysis */}
           <AgeGroupAnalysis ageChartData={ageChartData} unitName="All Departments" />
 
-          {/* Participants Distribution */}
           <section>
             <div className="grid grid-cols-1 gap-6">
-              {/* Gender Analysis */}
               <Card className="shadow-xl">
                 <div className="p-6">
                   <h2 className="text-foreground mb-6 text-lg font-semibold">
@@ -603,7 +399,6 @@ export default function ExecutiveSummaryComponent() {
             </div>
           </section>
 
-          {/* Department Analysis */}
           <DepartmentAnalysis
             departmentChartData={streamChartData}
             unitName="All Streams"
@@ -623,7 +418,6 @@ export default function ExecutiveSummaryComponent() {
             comparison="Department Comparison"
           />
 
-          {/* Satisfaction Score Trend by Domain */}
           <section>
             <Card className="shadow-xl">
               <div className="p-6">
@@ -634,7 +428,7 @@ export default function ExecutiveSummaryComponent() {
                 <ResponsiveContainer width="100%" height={300}>
                   <RechartsLineChart data={domainChartData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={60} fontSize={12} />
+                    <XAxis dataKey="name" angle={0} textAnchor="end" height={60} fontSize={10} />
                     <YAxis />
                     <Tooltip />
                     <Legend />
@@ -653,19 +447,12 @@ export default function ExecutiveSummaryComponent() {
             </Card>
           </section>
 
-          {/* Location Breakdown */}
           <section>
             <Card className="p-6">
               <h3 className="text-foreground mb-4 font-semibold">Location Breakdown</h3>
               <div className="space-y-3">
                 {apiData.locationStats.map(
-                  (loc: {
-                    location: string;
-                    totalResponses: number;
-                    locationPercent: number;
-                    avgRisk: number;
-                    satisfactionScore: number;
-                  }) => (
+                  (loc: { location: string; totalResponses: number; locationPercent: number; avgRisk: number; satisfactionScore: number }) => (
                     <div
                       key={loc.location}
                       className="flex items-center justify-between border-b pb-3 last:border-b-0"
@@ -689,7 +476,6 @@ export default function ExecutiveSummaryComponent() {
             </Card>
           </section>
 
-          {/* Privacy Notice */}
           <Card className="border-blue-200 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-950">
             <div className="flex items-start gap-3">
               <Shield className="mt-1 h-5 w-5 flex-shrink-0 text-blue-600" />
@@ -706,9 +492,7 @@ export default function ExecutiveSummaryComponent() {
                 <div className="rounded-lg bg-blue-100 p-3 text-xs text-blue-900 dark:bg-blue-900 dark:text-blue-100">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <span>
-                      <span className="font-semibold">
-                        {apiData.totalParticipants} total participants
-                      </span>{" "}
+                      <span className="font-semibold">{apiData.totalParticipants} total participants</span>{" "}
                       across all departments and locations
                     </span>
                     <span className="hidden sm:block">•</span>

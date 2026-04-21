@@ -1,15 +1,13 @@
 "use client";
 
-import HierarchicalFilter from "@/components/dashboard/filter/HierarchicalFilter";
+import DashboardFilters, { FilterState, checkHasActiveFilters, initialFilterState } from "@/components/dashboard/filter/DashboardFilters";
 import { ClinicalRiskBarChart } from "@/components/dashboard/organizationDashboard/ClinicalRiskBarChart";
 import { GaugeChart } from "@/components/dashboard/organizationDashboard/GaugeChart";
 import { RiskLegend } from "@/components/dashboard/organizationDashboard/RiskLegend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import SelectInput from "@/components/ui/SelectInput";
-import { ageOptions, departments, genderOptions, locationOptions } from "@/data/survey";
 import { useGetSubdomainStatsMutation } from "@/redux/api/apis/surveyApi";
 import { Loader2, Smile, TrendingUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 interface DomainSummary {
@@ -19,15 +17,6 @@ interface DomainSummary {
   satisfiedScore: number;
   riskStatus: string;
   satisfactionStatus: string;
-}
-
-interface FilterState {
-  stream: string;
-  function: string;
-  department: string;
-  age: string;
-  gender: string;
-  location: string;
 }
 
 const getRiskLevel = (riskScore: number) => {
@@ -46,39 +35,23 @@ const getSatisfactionColor = (score: number) => {
 };
 
 export default function ClinicalRiskPage() {
-  const [filters, setFilters] = useState<FilterState>({
-    stream: "",
-    function: "",
-    department: "",
-    age: "",
-    gender: "",
-    location: "",
-  });
+  const [filters, setFilters] = useState<FilterState>(initialFilterState);
+  const [appliedFilters, setAppliedFilters] = useState<FilterState>(initialFilterState);
+  const [filterKey, setFilterKey] = useState(0);
 
   const [getSubdomainStats, { data: subdomainData, isLoading }] = useGetSubdomainStatsMutation();
 
   useEffect(() => {
-    let stream = "";
-    let fn = "";
-    let department = "";
-
-    if (filters.department) {
-      const parts = filters.department.split(" > ");
-      if (parts.length >= 1) stream = parts[0];
-      if (parts.length >= 2) fn = parts[1];
-      if (parts.length >= 3) department = parts[2];
-    }
-
     getSubdomainStats({
       dashboardDomain: "Clinical Risk Index",
-      stream: stream || undefined,
-      fn: fn || undefined,
-      department: department || undefined,
-      age: filters.age || undefined,
-      gender: filters.gender || undefined,
-      location: filters.location || undefined,
+      stream: appliedFilters.stream || undefined,
+      fn: appliedFilters.fn || undefined,
+      department: appliedFilters.department || undefined,
+      age: appliedFilters.age || undefined,
+      gender: appliedFilters.gender || undefined,
+      location: appliedFilters.location || undefined,
     });
-  }, [filters, getSubdomainStats]);
+  }, [appliedFilters, getSubdomainStats]);
 
   const responseData = subdomainData?.data;
   const domainSummary = responseData?.domainSummary || [];
@@ -86,36 +59,32 @@ export default function ClinicalRiskPage() {
   const dashboardDomainAverage = responseData?.dashboardDomainAverage;
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
-    if (key === "stream") {
-      setFilters((prev) => ({
-        ...prev,
-        stream: value,
-        function: "",
-        department: "",
-      }));
-    } else if (key === "function") {
-      setFilters((prev) => ({
-        ...prev,
-        function: value,
-        department: "",
-      }));
-    } else {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-    }
-  };
-
-  const resetFilters = () => {
-    setFilters({
-      stream: "",
-      function: "",
-      department: "",
-      age: "",
-      gender: "",
-      location: "",
+    setFilters((prev) => {
+      const updated = { ...prev, [key]: value };
+      if (key === "stream") {
+        updated.location = "";
+        updated.fn = "";
+        updated.department = "";
+      } else if (key === "location") {
+        updated.fn = "";
+        updated.department = "";
+      } else if (key === "fn") {
+        updated.department = "";
+      }
+      return updated;
     });
   };
 
-  const hasActiveFilters = Object.values(filters).some((v) => v !== "");
+  const handleApplyFilters = useCallback(() => {
+    setAppliedFilters(filters);
+    setFilterKey(prev => prev + 1);
+  }, [filters]);
+
+  const resetFilters = () => {
+    setFilters(initialFilterState);
+    setAppliedFilters(initialFilterState);
+    setFilterKey(prev => prev + 1);
+  };
 
   const hasInsufficientData = (responseData?.totalParticipants || 0) < 4;
 
@@ -125,133 +94,24 @@ export default function ClinicalRiskPage() {
         <div className="mb-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div>
-              {" "}
               <h1 className="text-xl font-bold text-gray-900 md:text-3xl xl:text-3xl">
                 Clinical Risk Index
-              </h1>{" "}
+              </h1>
               <p className="mt-2 text-lg text-gray-600">
-                Breakdown of burnout, anxiety, and depression indicators across your
-                organization{" "}
-              </p>{" "}
-            </div>
-
-            <div className="flex items-center gap-3">
-              {hasActiveFilters && (
-                <button
-                  onClick={resetFilters}
-                  className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-                >
-                  Reset Filters
-                </button>
-              )}
+                Breakdown of burnout, anxiety, and depression indicators across your organization
+              </p>
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="col-span-1 lg:col-span-3">
-              <HierarchicalFilter
-                value={filters.department || ""}
-                onChange={(value: string) => handleFilterChange("department", value)}
-                departments={departments}
-                placeholder="Bulk Filter by Stream, Function, Department"
-              />
-            </div>
-
-            <SelectInput
-              value={filters.location}
-              onChange={(v) => handleFilterChange("location", v)}
-              options={locationOptions}
-              placeholder="All Locations"
+<DashboardFilters
+              key={filterKey}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onApply={handleApplyFilters}
+              onReset={resetFilters}
+              isLoading={isLoading}
+              rollUpActive={subdomainData?.data?.rollUp || false}
             />
-
-            <SelectInput
-              value={filters.age}
-              onChange={(v) => handleFilterChange("age", v)}
-              options={ageOptions}
-              placeholder="All Ages"
-            />
-
-            <SelectInput
-              value={filters.gender}
-              onChange={(v) => handleFilterChange("gender", v)}
-              options={genderOptions}
-              placeholder="All Genders"
-            />
-          </div>
-
-          {hasActiveFilters && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {filters.stream && (
-                <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-                  Stream: {filters.stream}
-                </span>
-              )}
-              {filters.function && (
-                <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-800">
-                  Function: {filters.function}
-                </span>
-              )}
-              {filters.department && (
-                <>
-                  {filters.department.includes(" > ") ? (
-                    (() => {
-                      const parts = filters.department.split(" > ");
-                      return (
-                        <>
-                          {parts[0] && (
-                            <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-                              Stream: {parts[0]}
-                            </span>
-                          )}
-                          {parts[1] && (
-                            <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-800">
-                              Function: {parts[1]}
-                            </span>
-                          )}
-                          {parts[2] && (
-                            <span className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800">
-                              Department: {parts[2]}
-                            </span>
-                          )}
-                        </>
-                      );
-                    })()
-                  ) : (
-                    <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-                      Stream: {filters.department}
-                    </span>
-                  )}
-                </>
-              )}
-              {filters.age && (
-                <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
-                  Age: {filters.age}
-                </span>
-              )}
-              {filters.gender && (
-                <span className="inline-flex items-center rounded-full bg-pink-100 px-3 py-1 text-sm font-medium text-pink-800">
-                  Gender: {filters.gender}
-                </span>
-              )}
-              {filters.location && (
-                <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800">
-                  Location: {filters.location}
-                </span>
-              )}
-
-              <span
-                className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold ${
-                  hasActiveFilters
-                    ? subdomainData?.data?.rollUp
-                      ? "bg-red-200 text-red-800"
-                      : "bg-emerald-100 text-emerald-800"
-                    : "bg-emerald-100 text-emerald-800"
-                }`}
-              >
-                {subdomainData?.data?.rollUp ? "Roll Up" : "Actual"}
-              </span>
-            </div>
-          )}
         </div>
 
         {isLoading ? (
@@ -340,27 +200,9 @@ export default function ClinicalRiskPage() {
                       <ClinicalRiskBarChart
                         title="Clinical Risk Index"
                         description="Higher score = Lower clinical risk (better mental health)"
-                        stream={(() => {
-                          if (filters.department && filters.department.includes(" > ")) {
-                            const parts = filters.department.split(" > ");
-                            return parts[0] || "";
-                          }
-                          return filters.department || filters.stream || "";
-                        })()}
-                        fn={(() => {
-                          if (filters.department && filters.department.includes(" > ")) {
-                            const parts = filters.department.split(" > ");
-                            return parts[1] || "";
-                          }
-                          return filters.function || "";
-                        })()}
-                        department={(() => {
-                          if (filters.department && filters.department.includes(" > ")) {
-                            const parts = filters.department.split(" > ");
-                            return parts[2] || "";
-                          }
-                          return "";
-                        })()}
+                        stream={filters.stream}
+                        fn={filters.fn}
+                        department={filters.department}
                         age={filters.age}
                         gender={filters.gender}
                         location={filters.location}

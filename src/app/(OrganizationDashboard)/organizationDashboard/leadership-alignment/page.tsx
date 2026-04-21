@@ -1,16 +1,13 @@
 "use client";
 
+import DashboardFilters, { FilterState, initialFilterState } from "@/components/dashboard/filter/DashboardFilters";
 import { BarChartComponent } from "@/components/dashboard/organizationDashboard/BarChart";
 import { RiskLegend } from "@/components/dashboard/organizationDashboard/RiskLegend";
 import { ScoreCard } from "@/components/dashboard/organizationDashboard/ScoreCard";
 import { Card } from "@/components/ui/card";
-import SelectInput from "@/components/ui/SelectInput";
 import { useGetSubdomainStatsMutation } from "@/redux/api/apis/surveyApi";
 import { Loader2, Users } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-
-import HierarchicalFilter from "@/components/dashboard/filter/HierarchicalFilter";
-import { ageOptions, departments, genderOptions, locationOptions } from "@/data/survey";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface DepartmentSummary {
   department: string;
@@ -30,55 +27,25 @@ interface GenderSummary {
   satisfactionStatus: string;
 }
 
-interface FilterState {
-  stream: string;
-  function: string;
-  department: string;
-  age: string;
-  gender: string;
-  location: string;
-}
-
 export default function LeadershipAlignmentPage() {
-  const [filters, setFilters] = useState<FilterState>({
-    stream: "",
-    function: "",
-    department: "",
-    age: "",
-    gender: "",
-    location: "",
-  });
-
-  const availableFunctions = departments.find((d) => d.stream === filters.stream)?.functions || [];
-
-  const availableDepartments =
-    availableFunctions.find((f) => f.function === filters.function)?.departments || [];
+  const [filters, setFilters] = useState<FilterState>(initialFilterState);
+  const [appliedFilters, setAppliedFilters] = useState<FilterState>(initialFilterState);
+  const [filterKey, setFilterKey] = useState(0);
 
   const [getSubdomainStats, { data: subdomainData, isLoading: isSubdomainLoading }] =
     useGetSubdomainStatsMutation();
 
   useEffect(() => {
-    let stream = "";
-    let fn = "";
-    let department = "";
-
-    if (filters.department) {
-      const parts = filters.department.split(" > ");
-      if (parts.length >= 1) stream = parts[0];
-      if (parts.length >= 2) fn = parts[1];
-      if (parts.length >= 3) department = parts[2];
-    }
-
     getSubdomainStats({
       dashboardDomain: "Leadership & Alignment",
-      stream: stream || undefined,
-      fn: fn || undefined,
-      department: department || undefined,
-      age: filters.age || undefined,
-      gender: filters.gender || undefined,
-      location: filters.location || undefined,
+      stream: appliedFilters.stream || undefined,
+      fn: appliedFilters.fn || undefined,
+      department: appliedFilters.department || undefined,
+      age: appliedFilters.age || undefined,
+      gender: appliedFilters.gender || undefined,
+      location: appliedFilters.location || undefined,
     });
-  }, [filters, getSubdomainStats]);
+  }, [appliedFilters, getSubdomainStats]);
 
   const leadershipMetric = useMemo(() => {
     return subdomainData?.data?.domainSummary[0] || {};
@@ -86,7 +53,6 @@ export default function LeadershipAlignmentPage() {
 
   const genderComparisonData = useMemo(() => {
     if (!subdomainData?.data?.genderSummary) return [];
-
     return subdomainData.data.genderSummary.map((gender: GenderSummary) => ({
       name: gender.gender,
       value: gender.satisfiedScore,
@@ -96,7 +62,6 @@ export default function LeadershipAlignmentPage() {
 
   const departmentComparisonData = useMemo(() => {
     if (!subdomainData?.data?.departmentSummary) return [];
-
     return subdomainData.data.departmentSummary.map((dept: DepartmentSummary) => ({
       name: dept.department,
       value: dept.satisfiedScore,
@@ -107,49 +72,34 @@ export default function LeadershipAlignmentPage() {
   const leadershipSubdomainMetrics = subdomainData?.data;
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
-    if (key === "stream") {
-      setFilters((prev) => ({
-        ...prev,
-        stream: value,
-        function: "",
-        department: "",
-      }));
-    } else if (key === "function") {
-      setFilters((prev) => ({
-        ...prev,
-        function: value,
-        department: "",
-      }));
-    } else {
-      setFilters((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-    }
-  };
-
-  const resetFilters = () => {
-    setFilters({
-      stream: "",
-      function: "",
-      department: "",
-      age: "",
-      gender: "",
-      location: "",
+    setFilters((prev) => {
+      const updated = { ...prev, [key]: value };
+      if (key === "stream") {
+        updated.location = "";
+        updated.fn = "";
+        updated.department = "";
+      } else if (key === "location") {
+        updated.fn = "";
+        updated.department = "";
+      } else if (key === "fn") {
+        updated.department = "";
+      }
+      return updated;
     });
   };
 
-  const isFilterActive =
-    filters.stream !== "" ||
-    filters.function !== "" ||
-    filters.department !== "" ||
-    filters.age !== "" ||
-    filters.gender !== "" ||
-    filters.location !== "";
+  const handleApplyFilters = useCallback(() => {
+    setAppliedFilters(filters);
+    setFilterKey(prev => prev + 1);
+  }, [filters]);
 
-  const isLoading = isSubdomainLoading;
+  const resetFilters = () => {
+    setFilters(initialFilterState);
+    setAppliedFilters(initialFilterState);
+    setFilterKey(prev => prev + 1);
+  };
+
   const hasInsufficientData = (leadershipSubdomainMetrics?.totalParticipants || 0) < 4;
-  console.log(...departments);
 
   return (
     <div className="flex">
@@ -162,164 +112,23 @@ export default function LeadershipAlignmentPage() {
                   Leadership & Alignment
                 </h1>
                 <p className="text-muted-foreground mt-2">
-                  Analysis of leadership effectiveness and organizational alignment across
-                  demographics
+                  Analysis of leadership effectiveness and organizational alignment across demographics
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                {isFilterActive && (
-                  <button
-                    onClick={resetFilters}
-                    className="rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-                  >
-                    Reset Filters
-                  </button>
-                )}
-              </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-4">
-              <div className="col-span-1 lg:col-span-4">
-                <HierarchicalFilter
-                  value={filters.department || ""}
-                  onChange={(value: string) => handleFilterChange("department", value)}
-                  departments={departments}
-                  placeholder="Bulk Filter by Stream, Function, Department"
-                />
-              </div>
-
-              <SelectInput
-                value={filters.location}
-                onChange={(value) => handleFilterChange("location", value)}
-                options={[...locationOptions]}
-                placeholder="Filter by Location"
-              />
-
-              <SelectInput
-                value={filters.stream}
-                onChange={(value) => handleFilterChange("stream", value)}
-                options={departments
-                  .map((stream) => ({
-                    label: stream.stream,
-                    value: stream.stream,
-                  }))
-                  .slice()}
-                placeholder="Filter by Stream"
-              />
-
-              <SelectInput
-                value={filters.age}
-                onChange={(value) => handleFilterChange("age", value)}
-                options={[...ageOptions]}
-                placeholder="Filter by Age"
-              />
-
-              <SelectInput
-                value={filters.gender}
-                onChange={(value) => handleFilterChange("gender", value)}
-                options={[...genderOptions]}
-                placeholder="Filter by Gender"
-              />
-            </div>
-
-            {(filters.stream || filters.function || filters.department) && (
-              <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-4">
-                {filters.stream && (
-                  <SelectInput
-                    value={filters.function}
-                    onChange={(value) => handleFilterChange("function", value)}
-                    options={availableFunctions
-                      .map((func) => ({
-                        label: func.function,
-                        value: func.function,
-                      }))
-                      .slice()}
-                    placeholder="Filter by Function"
-                  />
-                )}
-
-                {filters.stream && filters.function && (
-                  <SelectInput
-                    value={filters.department}
-                    onChange={(value) => handleFilterChange("department", value)}
-                    options={availableDepartments
-                      .map((dept) => ({
-                        label: dept,
-                        value: dept,
-                      }))
-                      .slice()}
-                    placeholder="Filter by Department"
-                  />
-                )}
-              </div>
-            )}
-
-            {isFilterActive && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {filters.department && (
-                  <>
-                    {filters.department.includes(" > ") ? (
-                      (() => {
-                        const parts = filters.department.split(" > ");
-                        return (
-                          <>
-                            {parts[0] && (
-                              <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-                                Stream: {parts[0]}
-                              </span>
-                            )}
-                            {parts[1] && (
-                              <span className="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-800">
-                                Function: {parts[1]}
-                              </span>
-                            )}
-                            {parts[2] && (
-                              <span className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800">
-                                Department: {parts[2]}
-                              </span>
-                            )}
-                          </>
-                        );
-                      })()
-                    ) : (
-                      <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800">
-                        Stream: {filters.department}
-                      </span>
-                    )}
-                  </>
-                )}
-                {filters.age && (
-                  <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
-                    Age: {filters.age}
-                  </span>
-                )}
-                {filters.gender && (
-                  <span className="inline-flex items-center rounded-full bg-pink-100 px-3 py-1 text-sm font-medium text-pink-800">
-                    Gender: {filters.gender}
-                  </span>
-                )}
-                {filters.location && (
-                  <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800">
-                    Location: {filters.location}
-                  </span>
-                )}
-
-                <span
-                  className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold ${
-                    isFilterActive
-                      ? subdomainData?.data?.rollUp
-                        ? "bg-red-200 text-red-800"
-                        : "bg-emerald-100 text-emerald-800"
-                      : "bg-emerald-100 text-emerald-800"
-                  }`}
-                >
-                  {subdomainData?.data?.rollUp ? "Roll Up" : "Actual"}
-                </span>
-              </div>
-            )}
+            <DashboardFilters
+              key={filterKey}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onApply={handleApplyFilters}
+              onReset={resetFilters}
+              isLoading={isSubdomainLoading}
+              rollUpActive={subdomainData?.data?.rollUp || false}
+            />
           </div>
 
-          {isLoading ? (
+          {isSubdomainLoading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
             </div>
@@ -332,6 +141,7 @@ export default function LeadershipAlignmentPage() {
                   </p>
                 </Card>
               )}
+
               {!hasInsufficientData && (
                 <>
                   <div className="grid grid-cols-1">
@@ -350,60 +160,24 @@ export default function LeadershipAlignmentPage() {
                       data={genderComparisonData}
                       description="Leadership perception comparison across gender groups"
                       isLoading={isSubdomainLoading}
-                      stream={(() => {
-                        if (filters.department && filters.department.includes(" > ")) {
-                          const parts = filters.department.split(" > ");
-                          return parts[0] || "";
-                        }
-                        return filters.department || "";
-                      })()}
-                      fn={(() => {
-                        if (filters.department && filters.department.includes(" > ")) {
-                          const parts = filters.department.split(" > ");
-                          return parts[1] || "";
-                        }
-                        return "";
-                      })()}
-                      department={(() => {
-                        if (filters.department && filters.department.includes(" > ")) {
-                          const parts = filters.department.split(" > ");
-                          return parts[2] || "";
-                        }
-                        return "";
-                      })()}
-                      age={filters.age}
-                      gender={filters.gender}
-                      location={filters.location}
+                      stream={appliedFilters.stream}
+                      fn={appliedFilters.fn}
+                      department={appliedFilters.department}
+                      age={appliedFilters.age}
+                      gender={appliedFilters.gender}
+                      location={appliedFilters.location}
                     />
                     <BarChartComponent
                       title="Leadership Score by Department"
                       data={departmentComparisonData}
                       description="Leadership effectiveness ranking across departments"
                       isLoading={isSubdomainLoading}
-                      stream={(() => {
-                        if (filters.department && filters.department.includes(" > ")) {
-                          const parts = filters.department.split(" > ");
-                          return parts[0] || "";
-                        }
-                        return filters.department || "";
-                      })()}
-                      fn={(() => {
-                        if (filters.department && filters.department.includes(" > ")) {
-                          const parts = filters.department.split(" > ");
-                          return parts[1] || "";
-                        }
-                        return "";
-                      })()}
-                      department={(() => {
-                        if (filters.department && filters.department.includes(" > ")) {
-                          const parts = filters.department.split(" > ");
-                          return parts[2] || "";
-                        }
-                        return "";
-                      })()}
-                      age={filters.age}
-                      gender={filters.gender}
-                      location={filters.location}
+                      stream={appliedFilters.stream}
+                      fn={appliedFilters.fn}
+                      department={appliedFilters.department}
+                      age={appliedFilters.age}
+                      gender={appliedFilters.gender}
+                      location={appliedFilters.location}
                     />
                   </div>
 
@@ -433,9 +207,7 @@ export default function LeadershipAlignmentPage() {
                         <li className="flex items-start gap-3">
                           <span className="font-bold text-cyan-600">•</span>
                           <div>
-                            <p className="text-foreground font-medium">
-                              Engagement & Communication
-                            </p>
+                            <p className="text-foreground font-medium">Engagement & Communication</p>
                             <p className="text-muted-foreground mt-1 text-xs">
                               Transparent and frequent organizational communication
                             </p>

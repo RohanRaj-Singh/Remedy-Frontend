@@ -36,12 +36,21 @@ export const surveyApi = baseApi.injectEndpoints({
     // update this api
 
     getSubdomainStats: builder.mutation({
-      query: ({ dashboardDomain, stream, fn, department, age, gender, location }) => ({
-        method: "POST",
-        url: "/api/survey/subdomain-seats",
-        params: { stream, function: fn, department, age, gender, location },
-        body: { dashboardDomain },
-      }),
+      query: ({ dashboardDomain, stream, fn, department, age, gender, location }) => {
+        const queryParams = new URLSearchParams();
+        if (stream) queryParams.append("stream", stream);
+        if (fn) queryParams.append("function", fn);
+        if (department) queryParams.append("department", department);
+        if (age) queryParams.append("age", age);
+        if (gender) queryParams.append("gender", gender);
+        if (location) queryParams.append("location", location);
+        
+        return {
+          method: "POST",
+          url: `/api/survey/subdomain-seats${queryParams.toString() ? `?${queryParams.toString()}` : ""}`,
+          body: { dashboardDomain },
+        };
+      },
     }),
 
     // Submit survey result (POST)
