@@ -71,6 +71,60 @@ export const surveyApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Survey"],
     }),
+
+    // Email-invite token flow
+    getScannerSession: builder.query<any, string>({
+      query: (token) => ({
+        url: `/api/survey/scanner/session?token=${token}`,
+        method: "GET",
+      }),
+    }),
+
+    startSurveyByToken: builder.mutation<GetAllSurveyResponse, { token: string; seniorityLevel: string }>({
+      query: (body) => ({
+        url: "/api/survey/scanner/start-by-token",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Survey"],
+    }),
+
+    markInviteComplete: builder.mutation<any, { token: string; surveyId?: string }>({
+      query: (body) => ({
+        url: "/api/survey/scanner/mark-complete",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    // Admin: Upload employee Excel file
+    uploadEmployeeExcel: builder.mutation<any, FormData>({
+      query: (formData) => ({
+        url: "/api/survey/admin/upload-excel",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Survey"],
+    }),
+
+    // Admin: Send invitation emails
+    sendInvitations: builder.mutation<any, { organizationId: string; onlyPending?: boolean; limit?: number }>({
+      query: (body) => ({
+        url: "/api/survey/admin/send-invitations",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Survey"],
+    }),
+
+    // Admin: Get invite status report
+    getInviteStatus: builder.query<any, string>({
+      query: (organizationId) => ({
+        url: `/api/survey/admin/invite-status?organizationId=${organizationId}`,
+        method: "GET",
+      }),
+      providesTags: ["Survey"],
+    }),
   }),
 
   overrideExisting: false,
@@ -86,4 +140,14 @@ export const {
   // Organization dashboard
   useGetAllSurveyResultForOrganizationQuery,
   useGetAllSurveyStatisticsForOrganizationQuery,
+
+  // Email-invite token flow
+  useGetScannerSessionQuery,
+  useStartSurveyByTokenMutation,
+  useMarkInviteCompleteMutation,
+
+  // Admin: Email distribution
+  useUploadEmployeeExcelMutation,
+  useSendInvitationsMutation,
+  useGetInviteStatusQuery,
 } = surveyApi;

@@ -19,7 +19,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href={"/"}>
             <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-[#1386a3] to-[#1386a3]">
+              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-[#f37820] to-[#f37820]">
                 <Heart className="h-4 w-4 text-white" strokeWidth={3} />
                 {/* <Image src="/images/logo.png" alt="Remedy Logo" width={40} height={40} /> */}
               </div>
@@ -52,25 +52,25 @@ export default function Navbar() {
           <div className="hidden items-center gap-8 sm:flex">
             <Link
               href="/"
-              className="text-sm font-medium text-[#1386a3] transition-colors hover:text-[#1386a3]"
+              className="text-sm font-medium text-[#f58220] transition-colors hover:text-[#f58220]"
             >
               Home
             </Link>
             <Link
               href="/about"
-              className="text-sm font-medium text-[#1386a3] transition-colors hover:text-[#1386a3]"
+              className="text-sm font-medium text-[#f58220] transition-colors hover:text-[#f58220]"
             >
               About
             </Link>
             <Link
               href="/survey-details"
-              className="text-sm font-medium text-[#1386a3] transition-colors hover:text-[#1386a3]"
+              className="text-sm font-medium text-[#f58220] transition-colors hover:text-[#f58220]"
             >
               Survey Details
             </Link>
             <Link
               href="/contact"
-              className="text-sm font-medium text-[#1386a3] transition-colors hover:text-[#1386a3]"
+              className="text-sm font-medium text-[#f58220] transition-colors hover:text-[#f58220]"
             >
               Contact Us
             </Link>
@@ -79,7 +79,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="mt-2 rounded-lg bg-[#126479]/10 px-4 py-4 shadow-sm backdrop-blur-sm sm:hidden">
+          <div className="mt-2 rounded-lg bg-[#f58220]/10 px-4 py-4 shadow-sm backdrop-blur-sm sm:hidden">
             <div className="flex flex-col gap-4">
               <Link
                 href="/"

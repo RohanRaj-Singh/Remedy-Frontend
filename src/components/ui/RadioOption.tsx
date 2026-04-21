@@ -14,6 +14,7 @@ interface RadioOptionProps {
   checked: boolean;
   onChange: (value: string) => void;
   required?: boolean;
+  disabled?: boolean;
 }
 
 const RadioOption: React.FC<RadioOptionProps> = ({
@@ -25,6 +26,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   checked,
   onChange,
   required = false,
+  disabled = false,
 }) => {
   const { t } = useTranslation("common");
   const { language } = useAppSelector((state) => state.ui);
@@ -69,7 +71,7 @@ const RadioOption: React.FC<RadioOptionProps> = ({
       case "purple":
         return "bg-purple-500";
       case "yellow":
-        return "bg-[#126479]";
+        return "bg-yellow-500";
       case "red":
         return "bg-red-500";
       case "green":
@@ -80,14 +82,15 @@ const RadioOption: React.FC<RadioOptionProps> = ({
   };
 
   return (
-    <label className="group flex cursor-pointer items-center text-gray-800">
+    <label className={`group flex items-center text-gray-800 ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}>
       <input
         type="radio"
         name={name}
         value={value}
         checked={checked}
-        onChange={() => onChange(value)}
+        onChange={() => !disabled && onChange(value)}
         required={required}
+        disabled={disabled}
         className="hidden"
       />
       <span

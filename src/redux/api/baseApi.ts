@@ -1,11 +1,10 @@
 import type { RootState } from "@/redux/store/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getPublicApiBaseUrl } from "@/lib/api-config";
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: getPublicApiBaseUrl(),
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5001",
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState;
       const token = state.auth.token;

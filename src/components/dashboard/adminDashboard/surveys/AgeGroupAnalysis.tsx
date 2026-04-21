@@ -201,13 +201,13 @@ export default function AgeGroupAnalysis({
                   <Legend />
                   <Bar
                     dataKey="riskScore"
-                    name="Negative Score"
+                    name="Risk Score"
                     fill={CHART_COLORS.riskScore}
                     radius={[4, 4, 0, 0]}
                   />
                   <Bar
                     dataKey="satisfaction"
-                    name="Positive Score"
+                    name="Satisfaction %"
                     fill={CHART_COLORS.satisfaction}
                     radius={[4, 4, 0, 0]}
                   />

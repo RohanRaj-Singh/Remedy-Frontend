@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import LanguageToggle from "@/components/toggles/LanguageToggle";
 import CommonButton from "@/components/ui/CommonButton";
@@ -12,13 +12,17 @@ import {
   genderOptions,
   seniorityOptions,
 } from "@/data/survey";
-import { useGetStartSurveyMutation } from "@/redux/api/apis/surveyApi";
-import { setNextQuestion, setSurveyData } from "@/redux/api/slice/surveySlice";
+import {
+  useGetScannerSessionQuery,
+  useGetStartSurveyMutation,
+  useStartSurveyByTokenMutation,
+} from "@/redux/api/apis/surveyApi";
+import { setInviteToken, setNextQuestion, setSurveyData } from "@/redux/api/slice/surveySlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 
@@ -28,10 +32,13 @@ const genderValueMap: { [key: string]: string } = {
 };
 
 const ageValueMap: { [key: string]: string } = {
-  "survey.age.options.age18to24": "18-24",
-  "survey.age.options.age25to34": "25-34",
-  "survey.age.options.age35to44": "35-44",
-  "survey.age.options.age45to54": "45-54",
+  "18-25": "18-24",
+  "18-24": "18-24",
+  "25-34": "25-34",
+  "35-44": "35-44",
+  "44-54": "45-54",
+  "45-54": "45-54",
+  "55+": "55+",
 };
 
 const seniorityValueMap: { [key: string]: string } = {
@@ -46,13 +53,62 @@ const locationDisplayMap: { [key: string]: string } = {
   headOffice: "Muscat",
 };
 
+const normalizePrefillLocation = (value?: string) => {
+  if (!value) return "";
+  const normalized = value.trim().toLowerCase();
+  if (["muscat", "head office", "head_office", "headoffice"].includes(normalized)) return "headOffice";
+  if (["b60", "block 60", "block60"].includes(normalized)) return "block60";
+  if (["musandam", "msusundam", "musundam"].includes(normalized)) return "msusundam";
+  return value;
+};
+
+const normalizePrefillGender = (value?: string) => {
+  if (!value) return "";
+  const normalized = value.trim().toLowerCase();
+  if (["male", "female", "other"].includes(normalized)) return normalized;
+  return value;
+};
+
+const normalizePrefillAge = (value?: string) => {
+  if (!value) return "";
+  if (ageValueMap[value]) return ageValueMap[value];
+  const num = parseInt(value, 10);
+  if (!isNaN(num)) {
+    if (num < 25) return "18-24";
+    if (num < 35) return "25-34";
+    if (num < 45) return "35-44";
+    if (num < 55) return "45-54";
+    return "55+";
+  }
+  return value;
+};
+
+const normalizePrefillSeniority = (value?: string | null): string => {
+  if (!value) return "";
+  const v = value.trim().toLowerCase();
+  if (v === "senior") return "survey.seniority.options.seniorManagement";
+  if (v === "manager") return "survey.seniority.options.manager";
+  if (v === "employee") return "survey.seniority.options.employee";
+  return "";
+};
+
 export default function SurveyPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
   const organizationIdParams = searchParams.get("organizationId");
+  const tokenParam = searchParams.get("token");
+
+  // Token-based invite flow
+  const isTokenFlow = !!tokenParam;
+  const { data: sessionData, isLoading: sessionLoading, error: sessionError } =
+    useGetScannerSessionQuery(tokenParam ?? "", { skip: !tokenParam });
+
   const [startSurvey] = useGetStartSurveyMutation();
+  const [startSurveyByToken] = useStartSurveyByTokenMutation();
   const { t } = useTranslation("common");
+
+  const [autoSubmitting, setAutoSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     stream: "",
@@ -63,6 +119,61 @@ export default function SurveyPage() {
     seniority: "",
     location: "",
   });
+
+  // Apply prefill when scanner session data arrives
+  useEffect(() => {
+    if (sessionData?.data?.prefill) {
+      const p = sessionData.data.prefill;
+      setFormData((prev) => ({
+        ...prev,
+        stream: p.stream ?? prev.stream,
+        function: p.function ?? prev.function,
+        department: p.department ?? prev.department,
+        location: normalizePrefillLocation(p.location) || prev.location,
+        age: normalizePrefillAge(p.age) || prev.age,
+        gender: normalizePrefillGender(p.gender) || prev.gender,
+        seniority: normalizePrefillSeniority(p.seniorityLevel) || prev.seniority,
+      }));
+    }
+  }, [sessionData]);
+
+  // Auto-submit when token flow has ALL data prefilled (seniority included)
+  useEffect(() => {
+    if (
+      !isTokenFlow ||
+      !tokenParam ||
+      !sessionData ||
+      sessionData?.data?.completed ||
+      autoSubmitting
+    ) return;
+
+    const p = sessionData?.data?.prefill;
+    if (!p?.seniorityLevel) return; // seniority not in invite record — user must pick
+
+    const resolvedSeniority = seniorityValueMap[
+      normalizePrefillSeniority(p.seniorityLevel)
+    ] || p.seniorityLevel;
+
+    if (!resolvedSeniority) return;
+
+    // All data is available — auto-start the survey
+    setAutoSubmitting(true);
+    startSurveyByToken({ token: tokenParam, seniorityLevel: resolvedSeniority as any })
+      .unwrap()
+      .then((res) => {
+        if (res?.success) {
+          dispatch(setInviteToken(tokenParam));
+          dispatch(setSurveyData(res?.data?.survey));
+          dispatch(setNextQuestion(res?.data?.nextQuestion));
+          router.push("/survey-questions");
+        }
+      })
+      .catch(() => {
+        // If auto-start fails, fall back to showing the form
+        setAutoSubmitting(false);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionData]);
 
   const availableLocations = formData.stream
     ? Object.keys(
@@ -115,6 +226,35 @@ export default function SurveyPage() {
       return;
     }
 
+    const englishGender = genderValueMap[formData.gender] || formData.gender;
+    const englishAge = ageValueMap[formData.age] || formData.age;
+    const englishSeniority = seniorityValueMap[formData.seniority] || formData.seniority;
+
+    // â”€â”€ Token flow: use invite token endpoint â”€â”€
+    if (isTokenFlow && tokenParam) {
+      try {
+        const res = await startSurveyByToken({
+          token: tokenParam,
+          seniorityLevel: englishSeniority,
+        }).unwrap();
+
+        if (res?.success) {
+          dispatch(setInviteToken(tokenParam));
+          dispatch(setSurveyData(res?.data?.survey));
+          dispatch(setNextQuestion(res?.data?.nextQuestion));
+          router.push("/survey-questions");
+        } else {
+          Swal.fire({ icon: "warning", title: "Something went wrong", text: "Please try again later" });
+        }
+      } catch (error: any) {
+        const message =
+          error?.data?.message || error?.message || "Unable to start survey. Please try again.";
+        Swal.fire({ icon: "error", title: "Survey Start Failed", text: message });
+      }
+      return;
+    }
+
+    // â”€â”€ Normal (manual) flow â”€â”€
     const selectedDepartments =
       (streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>)[
         formData.stream
@@ -129,9 +269,6 @@ export default function SurveyPage() {
       return;
     }
 
-    const englishGender = genderValueMap[formData.gender] || formData.gender;
-    const englishAge = ageValueMap[formData.age] || formData.age;
-    const englishSeniority = seniorityValueMap[formData.seniority] || formData.seniority;
     const body = {
       stream: formData.stream,
       function: formData.function,
@@ -174,10 +311,56 @@ export default function SurveyPage() {
   // Helper function to convert strings to translation keys
   const toTranslationKey = (str: string) => {
     return str
-      .replace(/[^a-zA-Z0-9_\s]/g, "") // Remove special characters but keep underscores
-      .replace(/\s+/g, "_") // Replace spaces with underscores
+      .replace(/[^a-zA-Z0-9_\s]/g, "")
+      .replace(/\s+/g, "_")
       .toLowerCase();
   };
+
+  // Loading state while fetching scanner session
+  if (isTokenFlow && sessionLoading) {
+    return (
+      <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50">
+        <p className="text-gray-600 text-lg">Loading your survey...</p>
+      </div>
+    );
+  }
+
+  // Auto-submitting (all data prefilled including seniority)
+  if (isTokenFlow && autoSubmitting) {
+    return (
+      <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50">
+        <p className="text-gray-600 text-lg">Starting your survey, please wait...</p>
+      </div>
+    );
+  }
+
+  // Invalid / expired token
+  if (isTokenFlow && sessionError) {
+    return (
+      <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50 p-4">
+        <div className="rounded-xl bg-white p-8 shadow-lg text-center max-w-md w-full">
+          <h2 className="text-xl font-bold text-red-600 mb-3">Invalid or Expired Link</h2>
+          <p className="text-gray-600">
+            This survey link is no longer valid. Please contact your administrator for a new invitation.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Survey already completed via this token
+  if (isTokenFlow && sessionData?.data?.completed) {
+    return (
+      <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50 p-4">
+        <div className="rounded-xl bg-white p-8 shadow-lg text-center max-w-md w-full">
+          <h2 className="text-xl font-bold text-green-700 mb-3">Survey Already Completed</h2>
+          <p className="text-gray-600">
+            You have already completed this survey. Thank you for your participation.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50 p-4 pt-20">
@@ -188,6 +371,12 @@ export default function SurveyPage() {
         </Link>
         <LanguageToggle />
       </div>
+
+      {isTokenFlow && (
+        <div className="mb-4 w-full max-w-2xl rounded-lg border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
+          Your information has been pre-filled from your invitation. Only your <strong>seniority level</strong> needs to be selected below.
+        </div>
+      )}
 
       <div className="w-full max-w-2xl">
         <form className="my-4 space-y-6 rounded-xl bg-white p-6 shadow-lg" onSubmit={handleSubmit}>
@@ -212,10 +401,11 @@ export default function SurveyPage() {
             }))}
             placeholder={t("survey.stream.placeholder") || "Select your stream"}
             required
+            disabled={isTokenFlow}
           />
 
           {/* Location Selection */}
-          {formData.stream && (
+          {(formData.stream) && (
             <SelectInput
               label={t("survey.location.question") || "Which location do you work at?"}
               value={formData.location}
@@ -227,21 +417,22 @@ export default function SurveyPage() {
                   department: "",
                 })
               }
-              options={availableLocations.map((locationValue) => {
-                return {
-                  label: locationDisplayMap[locationValue] || locationValue,
-                  value: locationValue,
-                };
-              })}
-              placeholder={t("survey.location.placeholder", {
-                defaultValue: "Select your location",
-              })}
+              options={
+                isTokenFlow
+                  ? [{ label: locationDisplayMap[formData.location] || formData.location, value: formData.location }]
+                  : availableLocations.map((locationValue) => ({
+                      label: locationDisplayMap[locationValue] || locationValue,
+                      value: locationValue,
+                    }))
+              }
+              placeholder={t("survey.location.placeholder", { defaultValue: "Select your location" })}
               required
+              disabled={isTokenFlow}
             />
           )}
 
           {/* Function Selection */}
-          {formData.stream && formData.location && (
+          {(formData.stream && formData.location) && (
             <SelectInput
               label={t("survey.function.question") || "Which function do you work in?"}
               value={formData.function}
@@ -252,27 +443,37 @@ export default function SurveyPage() {
                   department: "",
                 })
               }
-              options={availableFunctions.map((func) => ({
-                label: t(`survey.functions.${toTranslationKey(func)}`) || func,
-                value: func,
-              }))}
+              options={
+                isTokenFlow
+                  ? [{ label: formData.function, value: formData.function }]
+                  : availableFunctions.map((func) => ({
+                      label: t(`survey.functions.${toTranslationKey(func)}`) || func,
+                      value: func,
+                    }))
+              }
               placeholder={t("survey.function.placeholder") || "Select your function"}
               required
+              disabled={isTokenFlow}
             />
           )}
 
           {/* Department Selection */}
-          {formData.stream && formData.location && formData.function && (
+          {(formData.stream && formData.location && formData.function) && (
             <SelectInput
               label={t("survey.department.question") || "Which department do you work in?"}
               value={formData.department}
               onChange={(val) => setFormData({ ...formData, department: val })}
-              options={availableDepartments.map((dept) => ({
-                label: t(`survey.departments.${toTranslationKey(dept)}`) || dept,
-                value: dept,
-              }))}
+              options={
+                isTokenFlow
+                  ? [{ label: formData.department, value: formData.department }]
+                  : availableDepartments.map((dept) => ({
+                      label: t(`survey.departments.${toTranslationKey(dept)}`) || dept,
+                      value: dept,
+                    }))
+              }
               placeholder={t("survey.department.placeholder") || "Select your department"}
               required
+              disabled={isTokenFlow}
             />
           )}
 
@@ -287,6 +488,7 @@ export default function SurveyPage() {
               onChange={(val) => handleRadioChange("seniority", val)}
               color="yellow"
               required
+              disabled={isTokenFlow && !!formData.seniority}
             />
           </div>
 
@@ -300,6 +502,7 @@ export default function SurveyPage() {
               value={formData.gender}
               onChange={(val) => handleRadioChange("gender", val)}
               required
+              disabled={isTokenFlow}
             />
           </div>
 
@@ -313,6 +516,7 @@ export default function SurveyPage() {
               value={formData.age}
               onChange={(val) => handleRadioChange("age", val)}
               required
+              disabled={isTokenFlow}
             />
           </div>
         </form>
@@ -335,4 +539,3 @@ export default function SurveyPage() {
     </div>
   );
 }
-

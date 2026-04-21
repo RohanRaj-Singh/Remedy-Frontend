@@ -387,6 +387,12 @@ export default function ExecutiveSummaryComponent() {
     }
   });
 
+  const overallSatisfaction =
+    mentalHealthMetrics.reduce(
+      (acc: number, current: MentalHealthMetric) => acc + current.satisfiedScore,
+      0,
+    ) / mentalHealthMetrics.length;
+
   const isRollUpActiveFlag = data?.data?.data?.rollUp || false;
 
   return (
@@ -628,7 +634,7 @@ export default function ExecutiveSummaryComponent() {
                 <ResponsiveContainer width="100%" height={300}>
                   <RechartsLineChart data={domainChartData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" angle={0} textAnchor="end" height={60} fontSize={10} />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={60} fontSize={12} />
                     <YAxis />
                     <Tooltip />
                     <Legend />

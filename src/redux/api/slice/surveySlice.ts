@@ -48,11 +48,13 @@ interface Survey {
 interface SurveyState {
   survey: Survey | null;
   nextQuestion: Question | null;
+  inviteToken: string | null;
 }
 
 const initialState: SurveyState = {
   survey: null,
   nextQuestion: null,
+  inviteToken: null,
 };
 
 
@@ -71,12 +73,16 @@ export const surveySlice = createSlice({
         state.survey.responses.push(action.payload);
       }
     },
+    setInviteToken: (state, action: PayloadAction<string | null>) => {
+      state.inviteToken = action.payload;
+    },
     resetSurvey: (state) => {
       state.survey = null;
       state.nextQuestion = null;
+      state.inviteToken = null;
     },
   },
 });
 
-export const { setSurveyData, setNextQuestion, addResponse, resetSurvey } = surveySlice.actions;
+export const { setSurveyData, setNextQuestion, addResponse, resetSurvey, setInviteToken } = surveySlice.actions;
 export default surveySlice.reducer;

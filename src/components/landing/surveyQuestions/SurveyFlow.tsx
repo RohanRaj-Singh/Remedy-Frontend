@@ -4,8 +4,8 @@
 import LanguageToggle from "@/components/toggles/LanguageToggle";
 import RadioOption from "@/components/ui/RadioOption";
 import { translateQuestion } from "@/data/translateQuestion";
-import { useSubmitResultMutation } from "@/redux/api/apis/surveyApi";
-import { setNextQuestion, setSurveyData } from "@/redux/api/slice/surveySlice";
+import { useSubmitResultMutation, useMarkInviteCompleteMutation } from "@/redux/api/apis/surveyApi";
+import { setNextQuestion, setSurveyData, setInviteToken } from "@/redux/api/slice/surveySlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
@@ -56,9 +56,11 @@ interface Survey {
 export default function SurveyFlow() {
   const dispatch = useAppDispatch();
   const { survey, nextQuestion } = useAppSelector((state) => state.survey);
+  const inviteToken = useAppSelector((state) => state.survey.inviteToken);
   const [isEnglish, setIsEnglish] = useState(false);
   const { language } = useAppSelector((state) => state.ui);
   const [submitResult, { isLoading }] = useSubmitResultMutation();
+  const [markInviteComplete] = useMarkInviteCompleteMutation();
 
   const [currentAnswer, setCurrentAnswer] = useState<string | null>(null);
 
@@ -88,8 +90,17 @@ export default function SurveyFlow() {
   );
 
   const hasFollowUp = survey?.followUpQuestions && survey.followUpQuestions.length > 0;
+  const allFollowUpAnswered = hasFollowUp
+    ? survey.followUpQuestions.every((q: any) =>
+        survey.responses?.some((r: any) => r.question === (typeof q === "string" ? q : q._id)),
+      )
+    : true;
   const stage =
-    allInitialAnswered && hasFollowUp ? "followUp" : allInitialAnswered ? "completed" : "initial";
+    allInitialAnswered && hasFollowUp && !allFollowUpAnswered
+      ? "followUp"
+      : allInitialAnswered && allFollowUpAnswered
+        ? "completed"
+        : "initial";
 
   const handleAnswerSelect = (value: string) => {
     setCurrentAnswer(value);
@@ -143,6 +154,20 @@ export default function SurveyFlow() {
       });
     }
   };
+
+  // Fire mark-complete when survey finishes (token flow only)
+  useEffect(() => {
+    if (stage === "completed" && inviteToken) {
+      markInviteComplete({
+        token: inviteToken,
+        ...(survey?._id ? { surveyId: survey._id } : {}),
+      })
+        .unwrap()
+        .catch(() => { /* fire-and-forget */ });
+      dispatch(setInviteToken(null));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage]);
 
   if (stage === "completed" || !survey || !currentQuestion) {
     return <ThankYou />;
@@ -224,7 +249,7 @@ export default function SurveyFlow() {
             <button
               onClick={handleNext}
               disabled={!currentAnswer || isLoading}
-              className={`inline-flex items-center justify-center gap-3 rounded-full border border-white px-7 py-2 text-xs font-medium transition-all duration-300 hover:scale-105 md:text-lg ${currentAnswer && !isLoading ? "bg-[#126479] text-white hover:bg-[#f58220]" : "bg-gray-200 text-gray-400"} ${!currentAnswer || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`inline-flex items-center justify-center gap-3 rounded-full border border-white px-7 py-2 text-xs font-medium transition-all duration-300 hover:scale-105 md:text-lg ${currentAnswer && !isLoading ? "bg-[#f58220] text-white hover:bg-[#f58220]" : "bg-gray-200 text-gray-400"} ${!currentAnswer || isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               Next
               <MoveLeft className="h-4 w-4 rotate-180" />

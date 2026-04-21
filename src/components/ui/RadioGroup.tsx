@@ -17,6 +17,7 @@ interface RadioGroupProps {
     color?: "blue" | "purple" | "yellow" | "red" | "green";
     required?: boolean;
     label?: string;
+    disabled?: boolean;
 }
 
 const RadioGroup: React.FC<RadioGroupProps> = ({
@@ -27,6 +28,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
     color = "green",
     required = false,
     label,
+    disabled = false,
 }) => {
     const { t } = useTranslation("common");
     
@@ -49,6 +51,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                     checked={value === option.value}
                     onChange={onChange}
                     required={required}
+                    disabled={disabled}
                 />
             ))}
         </div>

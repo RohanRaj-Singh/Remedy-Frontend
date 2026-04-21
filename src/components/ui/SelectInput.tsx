@@ -15,6 +15,7 @@ interface SelectInputProps {
   options: Option[];
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
 }
 
 export default function SelectInput({
@@ -24,6 +25,7 @@ export default function SelectInput({
   options,
   placeholder = "Select an option",
   required = false,
+  disabled = false,
 }: SelectInputProps) {
   const { t } = useTranslation("common");
 
@@ -39,10 +41,11 @@ export default function SelectInput({
       )}
       <div className="relative">
         <select
-          className="block w-full cursor-pointer appearance-none rounded-full border-2 border-white bg-gray-50 px-4 py-2.5 pr-10 text-gray-800 shadow-md transition-all duration-200 focus:appearance-none focus:border-white focus:ring-2 focus:ring-white focus:outline-none md:w-3/5"
+          className={`block w-full appearance-none rounded-full border-2 border-white bg-gray-50 px-4 py-2.5 pr-10 text-gray-800 shadow-md transition-all duration-200 focus:appearance-none focus:border-white focus:ring-2 focus:ring-white focus:outline-none md:w-3/5 ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required}
+          disabled={disabled}
         >
           <option value="">{translatedPlaceholder}</option>
           {options.map((opt) => (

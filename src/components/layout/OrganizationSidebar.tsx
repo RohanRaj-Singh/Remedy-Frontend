@@ -6,6 +6,7 @@ import {
   BarChart3,
   ChartLine,
   Flame,
+  Mail,
   Menu,
   Shield,
   Smile,
@@ -32,14 +33,19 @@ const staticNavigation = [
     icon: ChartLine,
   },
   {
-    name: "Support & Clarity",
+    name: "Leadership & Alignment",
     href: "/organizationDashboard/leadership-alignment",
     icon: Users,
   },
   {
-    name: "Workplace Morale",
+    name: "Satisfaction & Engagement",
     href: "/organizationDashboard/satisfaction-engagement",
     icon: Smile,
+  },
+  {
+    name: "Email Invitations",
+    href: "/organizationDashboard/email-invitations",
+    icon: Mail,
   },
 ];
 
@@ -72,14 +78,14 @@ export default function OrganizationSidebar() {
         {sidebarOpen ? (
           <Link href="/">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#126479]">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f58220]">
                 <Shield className="text-primary-foreground h-5 w-5" />
               </div>
               <span className="text-sidebar-foreground text-lg font-bold">Remedy</span>
             </div>
           </Link>
         ) : (
-          <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-[#126479]">
+          <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-[#f58220]">
             <Shield className="text-primary-foreground h-5 w-5" />
           </div>
         )}
@@ -95,7 +101,7 @@ export default function OrganizationSidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors",
                 isActive
-                  ? "text-primary-foreground bg-[#126479] font-medium"
+                  ? "text-primary-foreground bg-[#f58220] font-medium"
                   : "text-sidebar-foreground hover:bg-sidebar-accent",
               )}
             >

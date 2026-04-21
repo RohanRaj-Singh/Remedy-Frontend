@@ -16,8 +16,7 @@ const variants: Record<NonNullable<ButtonProps["variant"]>, string> = {
   secondary: "bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 cursor-pointer",
   ghost: "bg-transparent hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer",
   outline: "border border-foreground text-foreground hover:bg-foreground/10 cursor-pointer",
-  common:
-    "bg-[#3CCB7F] hover:bg-[#3CCB7A] text-white border border-white inline-flex items-center justify-center gap-3 rounded-full border px-7 py-2 font-medium transition-all duration-300 hover:scale-105 border border-white cursor-pointer",
+  common: "bg-[#3CCB7F] hover:bg-[#3CCB7A] text-white border border-white inline-flex items-center justify-center gap-3 rounded-full border px-7 py-2 font-medium transition-all duration-300 hover:scale-105 border border-white cursor-pointer",
 };
 
 const sizes: Record<NonNullable<ButtonProps["size"]>, string> = {

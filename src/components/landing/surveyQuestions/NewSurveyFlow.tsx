@@ -3,12 +3,12 @@
 
 import LanguageToggle from "@/components/toggles/LanguageToggle";
 import RadioOption from "@/components/ui/RadioOption";
-import { useSubmitResultMutation } from "@/redux/api/apis/surveyApi";
-import { setNextQuestion, setSurveyData } from "@/redux/api/slice/surveySlice";
+import { useSubmitResultMutation, useMarkInviteCompleteMutation } from "@/redux/api/apis/surveyApi";
+import { setNextQuestion, setSurveyData, setInviteToken } from "@/redux/api/slice/surveySlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import ThankYou from "./ThankYou";
 
@@ -55,7 +55,9 @@ interface Survey {
 export default function SurveyFlow() {
   const dispatch = useAppDispatch();
   const { survey, nextQuestion } = useAppSelector((state) => state.survey);
+  const inviteToken = useAppSelector((state) => state.survey.inviteToken);
   const [submitResult, { isLoading }] = useSubmitResultMutation();
+  const [markInviteComplete] = useMarkInviteCompleteMutation();
 
   const [currentAnswer, setCurrentAnswer] = useState<string | null>(null);
 
@@ -77,8 +79,17 @@ export default function SurveyFlow() {
   );
 
   const hasFollowUp = survey?.followUpQuestions && survey.followUpQuestions.length > 0;
+  const allFollowUpAnswered = hasFollowUp
+    ? survey.followUpQuestions.every((q: any) =>
+        survey.responses?.some((r: any) => r.question === (typeof q === "string" ? q : q._id)),
+      )
+    : true;
   const stage =
-    allInitialAnswered && hasFollowUp ? "followUp" : allInitialAnswered ? "completed" : "initial";
+    allInitialAnswered && hasFollowUp && !allFollowUpAnswered
+      ? "followUp"
+      : allInitialAnswered && allFollowUpAnswered
+        ? "completed"
+        : "initial";
 
   const handleAnswerSelect = (value: string) => {
     setCurrentAnswer(value);
@@ -132,6 +143,20 @@ export default function SurveyFlow() {
       });
     }
   };
+
+  // Fire mark-complete when survey finishes (token flow only)
+  useEffect(() => {
+    if (stage === "completed" && inviteToken) {
+      markInviteComplete({
+        token: inviteToken,
+        ...(survey?._id ? { surveyId: survey._id } : {}),
+      })
+        .unwrap()
+        .catch(() => { /* fire-and-forget */ });
+      dispatch(setInviteToken(null));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage]);
 
   if (stage === "completed" || !survey || !currentQuestion) {
     return <ThankYou />;
