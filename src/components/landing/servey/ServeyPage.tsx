@@ -92,6 +92,16 @@ const normalizePrefillSeniority = (value?: string | null): string => {
   return "";
 };
 
+const toDisplayLabel = (value?: string) => {
+  if (!value) return "";
+  let out = value.replace(/_/g, " ");
+  out = out.replace(/\bAnd\b/g, "&");
+  out = out.replace(/\bOr\b/g, "/");
+  out = out.replace(/60 & 48/g, "60&48");
+  out = out.replace(/People Technology & Culture/g, "People, Technology & Culture");
+  return out;
+};
+
 export default function SurveyPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -396,7 +406,7 @@ export default function SurveyPage() {
             options={Object.keys(
               streamLocationMapping as Record<string, Record<string, Record<string, string[]>>>,
             ).map((stream) => ({
-              label: t(`survey.streams.${toTranslationKey(stream)}`) || stream,
+              label: t(`survey.streams.${toTranslationKey(stream)}`) || toDisplayLabel(stream),
               value: stream,
             }))}
             placeholder={t("survey.stream.placeholder") || "Select your stream"}
@@ -419,9 +429,9 @@ export default function SurveyPage() {
               }
               options={
                 isTokenFlow
-                  ? [{ label: locationDisplayMap[formData.location] || formData.location, value: formData.location }]
+                  ? [{ label: locationDisplayMap[formData.location] || toDisplayLabel(formData.location), value: formData.location }]
                   : availableLocations.map((locationValue) => ({
-                      label: locationDisplayMap[locationValue] || locationValue,
+                      label: locationDisplayMap[locationValue] || toDisplayLabel(locationValue),
                       value: locationValue,
                     }))
               }
@@ -445,9 +455,9 @@ export default function SurveyPage() {
               }
               options={
                 isTokenFlow
-                  ? [{ label: formData.function, value: formData.function }]
+                  ? [{ label: toDisplayLabel(formData.function), value: formData.function }]
                   : availableFunctions.map((func) => ({
-                      label: t(`survey.functions.${toTranslationKey(func)}`) || func,
+                      label: t(`survey.functions.${toTranslationKey(func)}`) || toDisplayLabel(func),
                       value: func,
                     }))
               }
@@ -465,9 +475,9 @@ export default function SurveyPage() {
               onChange={(val) => setFormData({ ...formData, department: val })}
               options={
                 isTokenFlow
-                  ? [{ label: formData.department, value: formData.department }]
+                  ? [{ label: toDisplayLabel(formData.department), value: formData.department }]
                   : availableDepartments.map((dept) => ({
-                      label: t(`survey.departments.${toTranslationKey(dept)}`) || dept,
+                      label: t(`survey.departments.${toTranslationKey(dept)}`) || toDisplayLabel(dept),
                       value: dept,
                     }))
               }
