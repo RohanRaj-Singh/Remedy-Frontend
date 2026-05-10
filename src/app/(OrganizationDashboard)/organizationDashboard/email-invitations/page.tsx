@@ -50,6 +50,7 @@ const getOrganizationIdFromToken = (token: string | null): string | null => {
 
 export default function EmailInvitationsPage() {
   const [activeTab, setActiveTab] = useState<Tab>("upload");
+  const [monitorRefreshKey, setMonitorRefreshKey] = useState(0);
   const [emailInvitationsToken, setEmailInvitationsToken] = useState<string | null>(null);
   const [accessUserName, setAccessUserName] = useState("");
   const [accessPassword, setAccessPassword] = useState("");
@@ -61,6 +62,11 @@ export default function EmailInvitationsPage() {
   const [isPasswordChanging, setIsPasswordChanging] = useState(false);
   const token = useSelector((state: RootState) => state.auth.token as string | null);
   const organizationId = useMemo(() => getOrganizationIdFromToken(token), [token]);
+
+  const triggerMonitorRefresh = () => {
+    setActiveTab("monitor");
+    setMonitorRefreshKey((prev) => prev + 1);
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -326,8 +332,18 @@ export default function EmailInvitationsPage() {
 
       {/* Tab Content */}
       {activeTab === "upload" && <UploadExcelTab organizationId={organizationId} />}
-      {activeTab === "send" && <SendInvitationsTab organizationId={organizationId} />}
-      {activeTab === "monitor" && <MonitorStatusTab organizationId={organizationId} />}
+      {activeTab === "send" && (
+        <SendInvitationsTab
+          organizationId={organizationId}
+          onRefreshMonitor={triggerMonitorRefresh}
+        />
+      )}
+      {activeTab === "monitor" && (
+        <MonitorStatusTab
+          organizationId={organizationId}
+          refreshKey={monitorRefreshKey}
+        />
+      )}
     </div>
   );
 }
@@ -471,7 +487,13 @@ function UploadExcelTab({ organizationId }: { organizationId: string }) {
 /* ─────────────────────────────────────────────
    Tab 2: Send Invitations
 ───────────────────────────────────────────── */
-function SendInvitationsTab({ organizationId }: { organizationId: string }) {
+function SendInvitationsTab({
+  organizationId,
+  onRefreshMonitor,
+}: {
+  organizationId: string;
+  onRefreshMonitor: () => void;
+}) {
   const [sendInvitations, { isLoading }] = useSendInvitationsMutation();
   const [onlyPending, setOnlyPending] = useState(true);
   const [result, setResult] = useState<null | {
@@ -498,13 +520,21 @@ function SendInvitationsTab({ organizationId }: { organizationId: string }) {
     try {
       const res = await sendInvitations({ organizationId, onlyPending }).unwrap();
       setResult(res?.data ?? null);
-      Swal.fire({ icon: "success", title: "Done!", text: `${res?.data?.sent ?? 0} invitation(s) sent.`, timer: 2000, showConfirmButton: false });
+      Swal.fire({
+        icon: "success",
+        title: "Invitations Processing",
+        text: "Emails are being sent. The status will refresh automatically in a few moments.",
+        timer: 2500,
+        showConfirmButton: false,
+      });
+      onRefreshMonitor();
     } catch (err: any) {
       Swal.fire({
-        icon: "error",
-        title: "Send Failed",
-        text: err?.data?.message || "Something went wrong. Please try again.",
+        icon: "info",
+        title: "Request Still Processing",
+        text: err?.data?.message || "This can take a few minutes for large batches. Please check Monitor Status shortly.",
       });
+      onRefreshMonitor();
     }
   };
 
@@ -518,6 +548,9 @@ function SendInvitationsTab({ organizationId }: { organizationId: string }) {
           <p className="text-sm text-gray-500">
             Sends a unique survey link to each employee via email. Each link is pre-filled
             with the employee's details so no manual entry is required.
+          </p>
+          <p className="text-xs text-gray-400">
+            Large batches can take a few minutes. Use Monitor Status to track progress.
           </p>
 
           {/* Mode toggle */}
@@ -592,10 +625,23 @@ function SendInvitationsTab({ organizationId }: { organizationId: string }) {
 /* ─────────────────────────────────────────────
    Tab 3: Monitor Status
 ───────────────────────────────────────────── */
-function MonitorStatusTab({ organizationId }: { organizationId: string }) {
+function MonitorStatusTab({
+  organizationId,
+  refreshKey,
+}: {
+  organizationId: string;
+  refreshKey: number;
+}) {
   const { data, isLoading, isFetching, refetch } = useGetInviteStatusQuery(organizationId);
   const summary = data?.data?.summary;
   const invites: any[] = data?.data?.invites ?? [];
+
+  useEffect(() => {
+    if (!refreshKey) return;
+    refetch();
+    const timer = setTimeout(() => refetch(), 5000);
+    return () => clearTimeout(timer);
+  }, [refreshKey, refetch]);
 
   const summaryCards = [
     { label: "Total Employees", value: summary?.total ?? 0, icon: Users, color: "text-gray-700" },
